@@ -23,6 +23,12 @@ Extension VS Code pour l'**analyse d'erreurs** dans le développement automobile
 
 **Vues latérales** (icône voiture) : DTCs, Errors Analysis, Session & Status, Connections.
 
+## Documentation
+
+- **[Guide utilisateur complet](docs/GUIDE.md)** — installation, interface, architecture, workflows, safety
+- Index : [docs/README.md](docs/README.md)
+- Présentation PowerPoint et guide Word : générés dans `docs/` (`.pptx` / `.docx`)
+
 ## Prérequis
 
 - VS Code ≥ 1.85
