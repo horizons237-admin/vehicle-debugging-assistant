@@ -29,5 +29,5 @@ Les appels Python sont bornés (`pythonTimeoutMs`) pour éviter les blocages ind
 
 1. Consigner version de l’extension + mode (simu/réel) dans les tickets.
 2. Joindre extraits de log / freeze frames comme evidence.
-3. Ne pas activer LLM remote sur données classifiées sans accord compliance.
+3. Ne pas activer LLM remote sur données classifiées sans accord compliance ; l’opt-in `vehicleDebug.llm.allowRemoteDataUpload` (défaut `false`) bloque l’envoi distant.
 4. Pour un usage process formel : engager une **qualification d’outil** (TCL) hors scope de ce dépôt seul.

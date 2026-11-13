@@ -101,6 +101,26 @@ Fournis:
 }
 
 async function runAnalysis(client: LlmClient, userPrompt: string, title: string): Promise<void> {
+  // P1: explicit warning when remote LLM may receive diagnostic data
+  const cfg = vscode.workspace.getConfiguration('vehicleDebug');
+  const remoteEnabled = cfg.get<boolean>('llm.remote.enabled', false);
+  const localEnabled = cfg.get<boolean>('llm.local.enabled', false);
+  const allowRemote = cfg.get<boolean>('llm.allowRemoteDataUpload', false);
+
+  if (remoteEnabled && !localEnabled && !allowRemote) {
+    const choice = await vscode.window.showWarningMessage(
+      'Le LLM distant est activé mais allowRemoteDataUpload est désactivé. ' +
+        'Des extraits de logs/DTC seraient envoyés hors machine. Continuer en activant l’opt-in pour cette session ?',
+      { modal: true },
+      'Autoriser pour cette session',
+      'Annuler'
+    );
+    if (choice !== 'Autoriser pour cette session') {
+      return;
+    }
+    await cfg.update('llm.allowRemoteDataUpload', true, vscode.ConfigurationTarget.Workspace);
+  }
+
   await vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,

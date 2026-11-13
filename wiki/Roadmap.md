@@ -14,10 +14,10 @@ Basée sur l’audit et le plan de remédiation du projet.
 
 ## P1 — Qualité
 
-- CI GitHub Actions (compile + smoke Python)
-- Tests automatisés Python (log / ARXML / UDS simulation)
-- Opt-in explicite envoi données vers LLM remote
-- ESLint / réduction des `any`
+- CI GitHub Actions (compile + smoke Python) — **Fait** (`.github/workflows/ci.yml`)
+- Tests automatisés Python (log / ARXML / UDS / DoIP) — **Fait** (`tests/`, 5 tests)
+- Opt-in explicite envoi données vers LLM remote — **Fait** (`llm.allowRemoteDataUpload`)
+- ESLint de base — **Fait** (`.eslintrc.cjs`, `npm run lint`)
 
 ## P2 — Produit
 
@@ -37,9 +37,9 @@ Basée sur l’audit et le plan de remédiation du projet.
 ## Critères de sortie v0.2.0
 
 - [ ] Manifeste unique sur `main`
-- [ ] CI verte
-- [ ] Timeout Python validé
-- [ ] LICENSE + lockfile
-- [ ] Opt-in LLM remote
-- [ ] ≥ 3 tests Python automatisés
+- [ ] CI verte (workflow ajouté)
+- [x] Timeout Python validé
+- [x] LICENSE
+- [x] Opt-in LLM remote
+- [x] ≥ 3 tests Python automatisés (5)
 - [ ] VSIX installable testé en simulation
