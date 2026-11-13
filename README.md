@@ -1,6 +1,6 @@
 # Vehicle Debugging Assistant
 
-**Version 0.1.1** — Extension VS Code pour l'**analyse d'erreurs** dans le développement automobile (AUTOSAR, UDS, OBD-II, safety-critical / ISO 26262).
+Extension VS Code pour l'**analyse d'erreurs** dans le développement automobile (AUTOSAR, UDS, OBD-II, safety-critical / ISO 26262).
 
 ## Fonctionnalités
 
@@ -29,6 +29,18 @@
 - Index : [docs/README.md](docs/README.md)
 - Présentation PowerPoint et guide Word : générés dans `docs/` (`.pptx` / `.docx`)
 
+## Wiki
+
+Documentation structurée (pages wiki du dépôt) :
+
+- [Accueil du wiki](wiki/Home.md)
+- [Installation](wiki/Installation.md) · [Guide utilisateur](wiki/User-Guide.md) · [Architecture](wiki/Architecture.md)
+- [Commandes](wiki/Commands.md) · [Connexions](wiki/Connections.md) · [Configuration](wiki/Configuration.md)
+- [Safety](wiki/Safety.md) · [Dépannage](wiki/Troubleshooting.md) · [Développement](wiki/Development.md)
+- [Feuille de route](wiki/Roadmap.md) · [Index wiki](wiki/README.md)
+
+> L’onglet **Wiki** GitHub natif peut être alimenté en copiant ces pages (`_Sidebar.md` inclus), ou consulté directement via les fichiers `wiki/*.md` sur `main`.
+
 ## Prérequis
 
 - VS Code ≥ 1.85
@@ -53,12 +65,10 @@ F5 pour Extension Development Host.
 
 ## Configuration
 
-Settings `vehicleDebug.*` : `pythonPath`, **`pythonTimeoutMs`** (défaut 60000), `canInterface`, `canChannel`, `txId`/`rxId`, `transport` (`can`|`doip`|`simulation`), DoIP host/port, connexions Jira/Confluence/CodeBeamer/LLM.
-
-Les appels Python (UDS, logs, ARXML, DoIP) sont **interrompus automatiquement** après `pythonTimeoutMs` (SIGTERM puis SIGKILL).
+Settings `vehicleDebug.*` : pythonPath, pythonTimeoutMs, canInterface, canChannel, txId/rxId, transport (`can`|`doip`|`simulation`), DoIP host/port, connexions Jira/Confluence/CodeBeamer/LLM.
 
 Secrets via **Set Connection Token / Password** (Secret Storage).
 
 ## Licence
 
-MIT — voir [LICENSE](LICENSE).
+MIT
