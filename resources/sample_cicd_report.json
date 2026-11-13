@@ -1,0 +1,59 @@
+{
+  "meta": {
+    "pipeline": "ecu-safety-ci",
+    "build": "2026.11.13-042",
+    "commit": "a1b2c3d",
+    "generatedAt": "2026-11-13T00:00:00Z"
+  },
+  "errors": [
+    {
+      "category": "software_bug",
+      "severity": "critical",
+      "asilImpact": "B",
+      "source": "static",
+      "description": "MISRA C:2012 Rule 11.3 violation in Dem_SetEventStatus (pointer cast)",
+      "recommendation": "Refactor cast or justify with deviation record",
+      "evidence": { "file": "Dem.c", "line": 412, "tool": "QA-MISRA" }
+    },
+    {
+      "category": "safety_mechanism",
+      "severity": "major",
+      "asilImpact": "B",
+      "source": "test",
+      "description": "WdgM alive supervision checkpoint CP_Id=3 missed under load test",
+      "recommendation": "Check runnable period and WdgM config tolerance",
+      "evidence": { "test": "HIL_load_profile_3", "tool": "CANoe" }
+    },
+    {
+      "category": "communication",
+      "severity": "major",
+      "source": "uds",
+      "description": "NRC 0x78 Response Pending exceeded P2* on service 0x19",
+      "recommendation": "Profile DCM timing; verify CanTp buffer",
+      "evidence": { "service": "0x19", "nrc": "0x78" }
+    },
+    {
+      "category": "timing",
+      "severity": "minor",
+      "source": "log",
+      "description": "Sporadic P2 timeout on extended session transitions",
+      "recommendation": "Collect more traces; check bus load"
+    }
+  ],
+  "dtcs": [
+    {
+      "code": "U0100",
+      "status": "Confirmed",
+      "description": "Lost Communication with ECM/PCM",
+      "severity": "critical",
+      "freezeFrame": "Bus-off count=2, last error passive"
+    },
+    {
+      "code": "P0301",
+      "status": "Pending",
+      "description": "Cylinder 1 Misfire Detected",
+      "severity": "major",
+      "freezeFrame": "RPM=1800, Load=40%"
+    }
+  ]
+}
