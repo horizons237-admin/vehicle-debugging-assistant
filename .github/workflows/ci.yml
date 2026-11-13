@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install npm dependencies
+        run: npm ci || npm install
+
+      - name: Compile TypeScript
+        run: npm run compile
+
+      - name: Python syntax check
+        run: python3 -m py_compile src/python/*.py
+
+      - name: Install pytest
+        run: pip install pytest
+
+      - name: Run Python smoke tests
+        run: python3 -m pytest tests/ -v --tb=short
+
+      - name: Lint (optional)
+        run: npm run lint --if-present
+        continue-on-error: true
