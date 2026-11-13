@@ -435,6 +435,11 @@
           "type": "string",
           "default": "openai",
           "enum": ["openai", "azure", "anthropic", "custom"]
+        },
+        "vehicleDebug.llm.allowRemoteDataUpload": {
+          "type": "boolean",
+          "default": false,
+          "description": "Allow sending diagnostic excerpts (logs, DTCs, errors) to a remote LLM. Default false (opt-in). Prefer local LLM for sensitive data."
         }
       }
     }
@@ -443,13 +448,18 @@
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "package": "vsce package --no-dependencies"
+    "package": "vsce package --no-dependencies",
+    "test:python": "python3 -m pytest tests/ -v --tb=short",
+    "lint": "eslint src --ext .ts"
   },
   "devDependencies": {
     "@types/node": "^20.11.0",
     "@types/vscode": "^1.85.0",
     "@vscode/vsce": "^2.22.0",
-    "typescript": "^5.3.0"
+    "typescript": "^5.3.0",
+    "eslint": "^8.57.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0"
   },
   "author": "Vehicle Debug",
   "license": "MIT"
