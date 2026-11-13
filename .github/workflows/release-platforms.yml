@@ -1,0 +1,145 @@
+name: Release Windows & Linux
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version tag without v (e.g. 0.1.1)"
+        required: true
+        default: "0.1.1"
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.ver.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Resolve version
+        id: ver
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            V="${{ github.event.inputs.version }}"
+          else
+            REF="${GITHUB_REF_NAME}"
+            V="${REF#v}"
+            V="${V%-linux}"
+            V="${V%-windows}"
+          fi
+          echo "version=$V" >> "$GITHUB_OUTPUT"
+          echo "Using version $V"
+
+      - name: Install & package
+        run: |
+          npm ci || npm install
+          npm run compile
+          npx @vscode/vsce package --no-dependencies -o "vehicle-debugging-assistant-${{ steps.ver.outputs.version }}.vsix"
+
+      - name: Platform-named copies
+        run: |
+          V="${{ steps.ver.outputs.version }}"
+          cp "vehicle-debugging-assistant-${V}.vsix" "vehicle-debugging-assistant-${V}-linux.vsix"
+          cp "vehicle-debugging-assistant-${V}.vsix" "vehicle-debugging-assistant-${V}-windows.vsix"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vsix-packages
+          path: |
+            vehicle-debugging-assistant-*.vsix
+
+  release-linux:
+    needs: package
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: vsix-packages
+      - name: Create Linux release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ needs.package.outputs.version }}-linux
+          name: Vehicle Debugging Assistant v${{ needs.package.outputs.version }} (Linux)
+          body: |
+            ## Linux release — v${{ needs.package.outputs.version }}
+
+            Extension VS Code pour l'analyse d'erreurs automobile (UDS, OBD-II, AUTOSAR, DoIP).
+
+            ### Install
+            1. Download **vehicle-debugging-assistant-${{ needs.package.outputs.version }}-linux.vsix**
+            2. VS Code → Extensions → **…** → **Install from VSIX…**
+            3. Reload window
+
+            ### Linux / SocketCAN
+            ```bash
+            sudo apt install can-utils
+            pip install python-can udsoncan can-isotp
+            sudo modprobe vcan
+            sudo ip link add dev vcan0 type vcan 2>/dev/null || true
+            sudo ip link set up vcan0
+            ```
+            Settings: `canInterface=socketcan`, `canChannel=vcan0` (or `can0`).
+
+            Without hardware, **simulation mode** works out of the box.
+
+            ### Notes
+            - Same VSIX binary as Windows (VS Code extensions are cross-platform).
+            - Platform-specific release documents CAN stack differences only.
+            - Wiki: https://github.com/horizons237-admin/vehicle-debugging-assistant/wiki
+          files: vehicle-debugging-assistant-${{ needs.package.outputs.version }}-linux.vsix
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  release-windows:
+    needs: package
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: vsix-packages
+      - name: Create Windows release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ needs.package.outputs.version }}-windows
+          name: Vehicle Debugging Assistant v${{ needs.package.outputs.version }} (Windows)
+          body: |
+            ## Windows release — v${{ needs.package.outputs.version }}
+
+            Extension VS Code pour l'analyse d'erreurs automobile (UDS, OBD-II, AUTOSAR, DoIP).
+
+            ### Install
+            1. Download **vehicle-debugging-assistant-${{ needs.package.outputs.version }}-windows.vsix**
+            2. VS Code → Extensions → **…** → **Install from VSIX…**
+            3. Reload window
+
+            ### Windows / CAN
+            - Install **Python 3.8+** and set `vehicleDebug.pythonPath` if needed
+            ```text
+            pip install python-can udsoncan can-isotp
+            ```
+            - **SocketCAN is not available on Windows.** Prefer:
+              - `canInterface`: `pcan` / `vector` / `virtual` (with vendor drivers)
+              - or `transport=simulation` for analysis without hardware
+              - **DoIP** over Ethernet (`transport=doip`) remains usable
+
+            ### Notes
+            - Same VSIX binary as Linux (VS Code extensions are cross-platform).
+            - Platform-specific release documents CAN stack differences only.
+            - Wiki: https://github.com/horizons237-admin/vehicle-debugging-assistant/wiki
+          files: vehicle-debugging-assistant-${{ needs.package.outputs.version }}-windows.vsix
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
