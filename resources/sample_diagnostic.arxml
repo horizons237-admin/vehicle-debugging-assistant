@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Minimal diagnostic-oriented ARXML fragment for Vehicle Debugging Assistant demos -->
+<AUTOSAR xmlns="http://autosar.org/schema/r4.0">
+  <AR-PACKAGES>
+    <AR-PACKAGE>
+      <SHORT-NAME>DiagnosticExtract</SHORT-NAME>
+      <ELEMENTS>
+        <DIAGNOSTIC-EVENT>
+          <SHORT-NAME>Ev_MisfireCyl1_P0301</SHORT-NAME>
+          <UDS-DTC-VALUE>P0301</UDS-DTC-VALUE>
+        </DIAGNOSTIC-EVENT>
+        <DIAGNOSTIC-EVENT>
+          <SHORT-NAME>Ev_LostCommECM_U0100</SHORT-NAME>
+          <UDS-DTC-VALUE>U0100</UDS-DTC-VALUE>
+        </DIAGNOSTIC-EVENT>
+        <DIAGNOSTIC-EVENT>
+          <SHORT-NAME>Ev_WheelSpeedLF_C0035</SHORT-NAME>
+          <UDS-DTC-VALUE>C0035</UDS-DTC-VALUE>
+        </DIAGNOSTIC-EVENT>
+        <DIAGNOSTIC-TROUBLE-CODE>
+          <SHORT-NAME>Dtc_BatteryLow</SHORT-NAME>
+          <UDS-DTC-VALUE>B1234</UDS-DTC-VALUE>
+        </DIAGNOSTIC-TROUBLE-CODE>
+        <DIAGNOSTIC-SERVICE>
+          <SHORT-NAME>ReadDtcInformation_0x19</SHORT-NAME>
+        </DIAGNOSTIC-SERVICE>
+        <DIAGNOSTIC-SERVICE>
+          <SHORT-NAME>ClearDiagnosticInformation_0x14</SHORT-NAME>
+        </DIAGNOSTIC-SERVICE>
+        <DIAGNOSTIC-SERVICE>
+          <SHORT-NAME>DiagnosticSessionControl_0x10</SHORT-NAME>
+        </DIAGNOSTIC-SERVICE>
+      </ELEMENTS>
+    </AR-PACKAGE>
+  </AR-PACKAGES>
+</AUTOSAR>

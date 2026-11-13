@@ -1,0 +1,24 @@
+# Sample automotive diagnostic / CAN trace for Vehicle Debugging Assistant
+# Timestamp | ID | Data / Event
+
+0.000000  7E0  02 10 03          # DiagnosticSessionControl – extended
+0.015200  7E8  06 50 03 00 32 01  F4
+0.020100  7E0  03 22 F1 90       # ReadDataByIdentifier VIN
+0.035400  7E8  11 62 F1 90 57 56 57 5A 5A 5A 31 4A ...
+0.100000  7E0  03 19 02 FF       # ReadDTCInformation – report by status mask
+0.118000  7E8  0A 59 02 FF 03 01  P0301 Confirmed
+0.119500  7E8  ... U0100 Pending – Lost Communication with ECM/PCM
+0.250000  CAN  Bus-off recovered on channel can0
+0.300000  DEM  Event passed → failed : DTC P0301
+0.310000  WdgM Alive supervision checkpoint missed (CP_Id=3)
+0.320000  FiM  Function inhibition activated for ASIL-B path
+0.400000  7E0  02 3E 00          # TesterPresent
+0.412000  7E8  02 7E 00
+0.500000  Error: NRC 0x78 Response pending (P2* extended)
+0.650000  Error: NRC 0x22 Conditions not correct
+0.700000  Timeout waiting for response – P2* exceeded
+0.800000  MISRA rule 11.3 violation reported by static analysis
+0.850000  Exception in Runnable_Step: assertion failed (signal range)
+1.000000  Safe state transition requested by BswM
+1.100000  DEM  Aging counter reset for DTC C0035
+1.200000  Kernel log: watchdog soft lockup – CPU#0 stuck
