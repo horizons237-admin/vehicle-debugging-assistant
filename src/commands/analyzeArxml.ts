@@ -24,12 +24,26 @@ export async function analyzeArxml(
     {
       location: vscode.ProgressLocation.Notification,
       title: `Analyzing ARXML: ${path.basename(filePath)}…`,
-      cancellable: false
+      cancellable: true
     },
-    async () => {
-      const result = await runPythonScript('arxml_analyzer.py', [filePath]);
+    async (progress, token) => {
+      progress.report({ message: 'Parsing ARXML…' });
+      const result = await runPythonScript('arxml_analyzer.py', [filePath], undefined, undefined, token);
 
-      if (!result.success || result.data?.status === 'error') {
+      if (token.isCancellationRequested || result.cancelled) {
+        vscode.window.showInformationMessage('ARXML analysis cancelled');
+        return;
+      }
+
+      const payload = result.data as {
+        status?: string;
+        message?: string;
+        errors?: any[];
+        dtcs?: any[];
+        summary?: any;
+      } | undefined;
+
+      if (!result.success || payload?.status === 'error') {
         const fallback = await fallbackScan(filePath);
         if (fallback.errors.length || fallback.dtcs.length) {
           apply(errorProvider, dtcProvider, fallback.errors, fallback.dtcs, fallback.summary);
@@ -39,12 +53,12 @@ export async function analyzeArxml(
           return;
         }
         vscode.window.showErrorMessage(
-          `ARXML analysis failed: ${result.data?.message || result.stderr || result.stdout}`
+          `ARXML analysis failed: ${payload?.message || result.stderr || result.stdout}`
         );
         return;
       }
 
-      const data = result.data;
+      const data = payload || {};
       const errors: AnalyzedError[] = (data.errors || []).map((e: any, i: number) => ({
         id: `arxml-${i}-${Date.now()}`,
         category: e.category || 'configuration',
