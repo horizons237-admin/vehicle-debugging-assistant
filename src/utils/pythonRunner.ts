@@ -10,6 +10,7 @@ export interface PythonResult {
   stderr: string;
   data?: unknown;
   timedOut?: boolean;
+  cancelled?: boolean;
 }
 
 let _extensionPath: string | undefined;
@@ -19,22 +20,18 @@ export function setExtensionPath(p: string) {
 }
 
 const DEFAULT_TIMEOUT_MS = 60_000;
-const MAX_STDOUT_CHARS = 8_000_000; // ~8 MB guard
+const MAX_STDOUT_CHARS = 8_000_000;
 
 /**
  * Runs a Python script located in the extension's python/ folder.
- * Scripts are expected to print JSON on the last line of stdout for structured results.
- *
- * Hardening (P0):
- * - configurable timeout (vehicleDebug.pythonTimeoutMs)
- * - SIGTERM then SIGKILL on timeout
- * - stdout size limit to avoid OOM on huge logs
+ * Supports timeout, stdout limit, and CancellationToken (P0/P2).
  */
 export async function runPythonScript(
   scriptName: string,
   args: string[] = [],
   inputJson?: object,
-  timeoutMs?: number
+  timeoutMs?: number,
+  token?: vscode.CancellationToken
 ): Promise<PythonResult> {
   const config = getConfig();
   const extensionPath =
@@ -42,7 +39,6 @@ export async function runPythonScript(
     vscode.extensions.getExtension('vehicle-debug.vehicle-debugging-assistant')?.extensionPath ||
     path.join(__dirname, '..', '..');
 
-  // Development: src/python — packaged: python/ next to out/
   const candidates = [
     path.join(extensionPath, 'src', 'python', scriptName),
     path.join(extensionPath, 'python', scriptName),
@@ -96,6 +92,37 @@ export async function runPythonScript(
       const message = err instanceof Error ? err.message : String(err);
       finish({ success: false, stdout: '', stderr: message });
       return;
+    }
+
+    const onCancel = () => {
+      timedOut = false;
+      stderr += '\n[Vehicle Debug] Cancelled by user';
+      try {
+        proc.kill('SIGTERM');
+      } catch {
+        /* ignore */
+      }
+      softKillTimer = setTimeout(() => {
+        try {
+          proc.kill('SIGKILL');
+        } catch {
+          /* ignore */
+        }
+      }, 2_000);
+      finish({
+        success: false,
+        stdout,
+        stderr: stderr.trim() || 'Cancelled by user',
+        cancelled: true
+      });
+    };
+
+    if (token) {
+      if (token.isCancellationRequested) {
+        onCancel();
+        return;
+      }
+      token.onCancellationRequested(onCancel);
     }
 
     const timeoutHandle = setTimeout(() => {
