@@ -7,3 +7,10 @@ tsconfig.json
 node_modules/**
 .git/**
 **/*.vsix
+tests/**
+.github/**
+wiki/**
+docs/**
+pytest.ini
+.eslintrc.cjs
+.eslintignore

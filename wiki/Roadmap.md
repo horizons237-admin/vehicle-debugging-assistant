@@ -21,10 +21,10 @@ Basée sur l’audit et le plan de remédiation du projet.
 
 ## P2 — Produit
 
-- État de session *workspace-scoped*
-- Chemin UDS/DoIP réel documenté + checklist `vcan`
-- Packaging VSIX vérifié (présence `src/python`)
-- Annulation / progress sur analyses longues
+- État de session *workspace-scoped* — **Fait** (`sessionStore` + workspaceState)
+- Chemin UDS/DoIP réel documenté + checklist `vcan` — **Fait** (`docs/VCAN_CHECKLIST.md`)
+- Packaging VSIX — **Fait** (`.vscodeignore` + `docs/PACKAGING.md`)
+- Annulation / progress analyses — **Fait** (CancellationToken + progress log/ARXML)
 
 ## P3 — Maturité
 
@@ -42,4 +42,7 @@ Basée sur l’audit et le plan de remédiation du projet.
 - [x] LICENSE
 - [x] Opt-in LLM remote
 - [x] ≥ 3 tests Python automatisés (5)
-- [ ] VSIX installable testé en simulation
+- [x] Session workspace-scoped
+- [x] Doc vcan / packaging
+- [x] Cancel analyses
+- [ ] VSIX installable testé en simulation (manuel)
