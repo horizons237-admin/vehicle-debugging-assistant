@@ -1,0 +1,58 @@
+name: Deploy Wiki
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - "wiki/**"
+      - ".github/workflows/deploy-wiki.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Publish wiki/ to GitHub Wiki
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ ! -d wiki ]; then
+            echo "No wiki/ directory – skip"
+            exit 0
+          fi
+
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          WIKI_URL="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.wiki.git"
+          rm -rf /tmp/wiki-deploy
+          if git clone "$WIKI_URL" /tmp/wiki-deploy 2>/tmp/wiki-clone.err; then
+            echo "Wiki clone OK"
+          else
+            echo "Wiki clone failed (wiki may need one initial page via UI):"
+            cat /tmp/wiki-clone.err || true
+            mkdir -p /tmp/wiki-deploy
+            cd /tmp/wiki-deploy
+            git init
+            git checkout -b master
+            git remote add origin "$WIKI_URL"
+          fi
+
+          cd /tmp/wiki-deploy
+          rsync -a --delete --exclude='.git' --exclude='README.md' "$GITHUB_WORKSPACE/wiki/" ./
+
+          git add -A
+          if git diff --staged --quiet; then
+            echo "No wiki changes to publish"
+            exit 0
+          fi
+          git commit -m "docs(wiki): sync from ${GITHUB_SHA}"
+          git push -u origin HEAD:master
+          echo "Wiki published to https://github.com/${GITHUB_REPOSITORY}/wiki"
