@@ -1,14 +1,17 @@
 import * as vscode from 'vscode';
 import { runPythonScript } from '../utils/pythonRunner';
 import { getConfig } from '../utils/config';
-
-let isConnected = false;
+import {
+  isEcuConnected,
+  setEcuConnected,
+  TransportMode
+} from '../utils/sessionStore';
 
 export async function connectEcu(): Promise<boolean> {
   const config = getConfig();
 
   const ws = vscode.workspace.getConfiguration('vehicleDebug');
-  const transport = ws.get<string>('transport', 'can');
+  const transport = (ws.get<string>('transport', 'can') || 'can') as TransportMode;
   const doipEnabled = ws.get<boolean>('doip.enabled', false) || transport === 'doip';
 
   let result;
@@ -31,19 +34,40 @@ export async function connectEcu(): Promise<boolean> {
     });
   }
 
-  if (result.success && (result.data?.status === 'connected' || result.data?.status === 'ok')) {
-    isConnected = true;
+  const data = result.data as { status?: string; mode?: string } | undefined;
+
+  if (result.success && (data?.status === 'connected' || data?.status === 'ok')) {
+    const mode = data?.mode === 'simulation' ? 'simulation' : 'real';
+    setEcuConnected({
+      connected: true,
+      mode,
+      transport: mode === 'simulation' ? 'simulation' : transport,
+      sessionName: config.defaultSession,
+      lastAction: 'Connected'
+    });
     return true;
   }
 
-  if (result.stderr.includes('No module named') || result.stderr.includes('can') || !result.success) {
+  if (
+    (result.stderr &&
+      (result.stderr.includes('No module named') ||
+        result.stderr.includes('can') ||
+        result.stderr.includes('udsoncan'))) ||
+    !result.success
+  ) {
     const choice = await vscode.window.showWarningMessage(
       'Hardware/Python dependencies not available. Enter simulation mode?',
       'Yes (Simulation)',
       'Cancel'
     );
     if (choice === 'Yes (Simulation)') {
-      isConnected = true;
+      setEcuConnected({
+        connected: true,
+        mode: 'simulation',
+        transport: 'simulation',
+        sessionName: config.defaultSession,
+        lastAction: 'Connected (simulation)'
+      });
       vscode.window.showInformationMessage('Running in simulation mode (mock ECU)');
       return true;
     }
@@ -54,13 +78,20 @@ export async function connectEcu(): Promise<boolean> {
 }
 
 export async function disconnectEcu(): Promise<void> {
-  if (!isConnected) {
+  if (!isEcuConnected()) {
     return;
   }
   await runPythonScript('uds_client.py', ['disconnect']);
-  isConnected = false;
+  setEcuConnected({
+    connected: false,
+    mode: 'none',
+    transport: 'none',
+    sessionName: 'None',
+    lastAction: 'Disconnected'
+  });
 }
 
+/** @deprecated Prefer isEcuConnected() from sessionStore */
 export function getConnectionState(): boolean {
-  return isConnected;
+  return isEcuConnected();
 }
