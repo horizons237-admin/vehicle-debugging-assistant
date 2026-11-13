@@ -2,7 +2,7 @@
   "name": "vehicle-debugging-assistant",
   "displayName": "Vehicle Debugging Assistant",
   "description": "Assistant de débogage véhicule : analyse d'erreurs UDS/OBD-II, DTC, logs CAN et diagnostics AUTOSAR pour le développement automobile safety-critical.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "vehicle-debug",
   "engines": {
     "vscode": "^1.85.0"
@@ -210,6 +210,69 @@
         }
       ]
     },
+    "menus": {
+      "view/title": [
+        {
+          "command": "vehicleDebug.refreshViews",
+          "when": "view == vehicleDebug.dtcView || view == vehicleDebug.errorView",
+          "group": "navigation"
+        },
+        {
+          "command": "vehicleDebug.readDtcs",
+          "when": "view == vehicleDebug.dtcView",
+          "group": "navigation"
+        },
+        {
+          "command": "vehicleDebug.configureConnections",
+          "when": "view == vehicleDebug.connectionsView",
+          "group": "navigation"
+        },
+        {
+          "command": "vehicleDebug.testConnection",
+          "when": "view == vehicleDebug.connectionsView",
+          "group": "navigation"
+        }
+      ],
+      "commandPalette": [
+        { "command": "vehicleDebug.connectEcu" },
+        { "command": "vehicleDebug.readDtcs" },
+        { "command": "vehicleDebug.analyzeLog" },
+        { "command": "vehicleDebug.showReport" },
+        { "command": "vehicleDebug.readDid" },
+        { "command": "vehicleDebug.openSampleLog" },
+        { "command": "vehicleDebug.configureConnections" },
+        { "command": "vehicleDebug.testConnection" },
+        { "command": "vehicleDebug.setConnectionSecret" },
+        { "command": "vehicleDebug.aiAnalyzeSelection" },
+        { "command": "vehicleDebug.aiAnalyzeAll" },
+        { "command": "vehicleDebug.exportConfluence" },
+        { "command": "vehicleDebug.importCicdReport" },
+        { "command": "vehicleDebug.analyzeArxml" },
+        { "command": "vehicleDebug.doipDiscover" }
+      ],
+      "view/item/context": [
+        {
+          "command": "vehicleDebug.aiAnalyzeError",
+          "when": "view == vehicleDebug.errorView && viewItem == analyzedError",
+          "group": "inline"
+        },
+        {
+          "command": "vehicleDebug.createTicketFromError",
+          "when": "view == vehicleDebug.errorView && viewItem == analyzedError",
+          "group": "inline"
+        },
+        {
+          "command": "vehicleDebug.aiAnalyzeDtc",
+          "when": "view == vehicleDebug.dtcView && viewItem == dtc",
+          "group": "inline"
+        },
+        {
+          "command": "vehicleDebug.createTicketFromDtc",
+          "when": "view == vehicleDebug.dtcView && viewItem == dtc",
+          "group": "inline"
+        }
+      ]
+    },
     "configuration": {
       "title": "Vehicle Debugging Assistant",
       "properties": {
@@ -217,6 +280,13 @@
           "type": "string",
           "default": "python3",
           "description": "Path to Python interpreter"
+        },
+        "vehicleDebug.pythonTimeoutMs": {
+          "type": "number",
+          "default": 60000,
+          "minimum": 1000,
+          "maximum": 600000,
+          "description": "Maximum time in milliseconds for a single Python backend call (UDS, log analysis, ARXML, DoIP). Process is terminated on timeout."
         },
         "vehicleDebug.canInterface": {
           "type": "string",
@@ -378,7 +448,8 @@
   "devDependencies": {
     "@types/node": "^20.11.0",
     "@types/vscode": "^1.85.0",
-    "typescript": "^5.3.3"
+    "@vscode/vsce": "^2.22.0",
+    "typescript": "^5.3.0"
   },
   "author": "Vehicle Debug",
   "license": "MIT"
