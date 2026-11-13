@@ -13,12 +13,19 @@ export interface LlmResult {
   model?: string;
 }
 
+/**
+ * Calls configured local or remote LLM.
+ * Preference: local if enabled and reachable, else remote.
+ * Remote path requires vehicleDebug.llm.allowRemoteDataUpload (opt-in).
+ */
 export class LlmClient {
   constructor(private manager: ConnectionManager) {}
 
   async analyze(systemPrompt: string, userPrompt: string): Promise<LlmResult> {
     const localEnabled = this.manager.getSetting('vehicleDebug.llm.local.enabled') === 'true';
     const remoteEnabled = this.manager.getSetting('vehicleDebug.llm.remote.enabled') === 'true';
+    const allowRemoteUpload =
+      this.manager.getSetting('vehicleDebug.llm.allowRemoteDataUpload') === 'true';
 
     if (localEnabled) {
       const r = await this.callLocal(systemPrompt, userPrompt);
@@ -27,6 +34,14 @@ export class LlmClient {
     }
 
     if (remoteEnabled) {
+      if (!allowRemoteUpload) {
+        return {
+          ok: false,
+          error:
+            'Envoi vers LLM distant refusé : activez vehicleDebug.llm.allowRemoteDataUpload ' +
+            '(opt-in) ou utilisez un LLM local. Des extraits de logs/DTC seraient transmis hors machine.'
+        };
+      }
       return this.callRemote(systemPrompt, userPrompt);
     }
 
