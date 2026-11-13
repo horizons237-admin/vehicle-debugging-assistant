@@ -1,6 +1,6 @@
 # Vehicle Debugging Assistant
 
-Extension VS Code pour l'**analyse d'erreurs** dans le développement automobile (AUTOSAR, UDS, OBD-II, safety-critical / ISO 26262).
+**Version 0.1.1** — Extension VS Code pour l'**analyse d'erreurs** dans le développement automobile (AUTOSAR, UDS, OBD-II, safety-critical / ISO 26262).
 
 ## Fonctionnalités
 
@@ -53,10 +53,12 @@ F5 pour Extension Development Host.
 
 ## Configuration
 
-Settings `vehicleDebug.*` : pythonPath, canInterface, canChannel, txId/rxId, transport (`can`|`doip`|`simulation`), DoIP host/port, connexions Jira/Confluence/CodeBeamer/LLM.
+Settings `vehicleDebug.*` : `pythonPath`, **`pythonTimeoutMs`** (défaut 60000), `canInterface`, `canChannel`, `txId`/`rxId`, `transport` (`can`|`doip`|`simulation`), DoIP host/port, connexions Jira/Confluence/CodeBeamer/LLM.
+
+Les appels Python (UDS, logs, ARXML, DoIP) sont **interrompus automatiquement** après `pythonTimeoutMs` (SIGTERM puis SIGKILL).
 
 Secrets via **Set Connection Token / Password** (Secret Storage).
 
 ## Licence
 
-MIT
+MIT — voir [LICENSE](LICENSE).
