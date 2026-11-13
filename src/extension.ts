@@ -29,7 +29,7 @@ import { doipDiscover } from './commands/doipDiscover';
 import { showReport } from './webviews/reportPanel';
 import { getConfig } from './utils/config';
 import { setExtensionPath } from './utils/pythonRunner';
-import { getLastAiSummary } from './utils/sessionStore';
+import { getLastAiSummary, initSessionStore, setLastAction, onDidChangeSession } from './utils/sessionStore';
 
 let dtcProvider: DtcTreeProvider;
 let errorProvider: ErrorTreeProvider;
@@ -41,12 +41,20 @@ let statusBar: vscode.StatusBarItem;
 export function activate(context: vscode.ExtensionContext) {
   console.log('Vehicle Debugging Assistant is now active');
   setExtensionPath(context.extensionPath);
+  initSessionStore(context.workspaceState);
 
   connectionManager = new ConnectionManager(context);
   dtcProvider = new DtcTreeProvider();
   errorProvider = new ErrorTreeProvider();
   sessionProvider = new SessionStatusProvider();
   connectionsProvider = new ConnectionsTreeProvider(connectionManager);
+
+  context.subscriptions.push(
+    onDidChangeSession((s) => {
+      updateStatusBar(s.connected);
+      sessionProvider.refresh();
+    })
+  );
 
   context.subscriptions.push(
     vscode.window.registerTreeDataProvider('vehicleDebug.dtcView', dtcProvider),
@@ -60,18 +68,18 @@ export function activate(context: vscode.ExtensionContext) {
       const success = await connectEcu();
       if (success) {
         sessionProvider.setConnected(true);
-        sessionProvider.setLastAction('Connected');
+        setLastAction('Connected');
         updateStatusBar(true);
         vscode.window.showInformationMessage('Connected to ECU');
         await readDtcs(dtcProvider, errorProvider);
-        sessionProvider.setLastAction('Read DTCs');
+        setLastAction('Read DTCs');
       }
     }),
 
     vscode.commands.registerCommand('vehicleDebug.disconnectEcu', async () => {
       await disconnectEcu();
       sessionProvider.setConnected(false);
-      sessionProvider.setLastAction('Disconnected');
+      setLastAction('Disconnected');
       updateStatusBar(false);
       dtcProvider.clear();
       errorProvider.clear();
@@ -80,22 +88,22 @@ export function activate(context: vscode.ExtensionContext) {
 
     vscode.commands.registerCommand('vehicleDebug.readDtcs', async () => {
       await readDtcs(dtcProvider, errorProvider);
-      sessionProvider.setLastAction('Read DTCs');
+      setLastAction('Read DTCs');
     }),
 
     vscode.commands.registerCommand('vehicleDebug.clearDtcs', async () => {
       await clearDtcs(dtcProvider, errorProvider);
-      sessionProvider.setLastAction('Cleared DTCs');
+      setLastAction('Cleared DTCs');
     }),
 
     vscode.commands.registerCommand('vehicleDebug.analyzeLog', async () => {
       await analyzeLog(errorProvider);
-      sessionProvider.setLastAction('Analyzed log');
+      setLastAction('Analyzed log');
     }),
 
     vscode.commands.registerCommand('vehicleDebug.readDid', async () => {
       await readDid();
-      sessionProvider.setLastAction('Read DID');
+      setLastAction('Read DID');
     }),
 
     vscode.commands.registerCommand('vehicleDebug.showReport', async () => {
@@ -195,17 +203,17 @@ export function activate(context: vscode.ExtensionContext) {
 
     vscode.commands.registerCommand('vehicleDebug.importCicdReport', async () => {
       await importCicdReport(errorProvider, dtcProvider);
-      sessionProvider.setLastAction('Imported CI/CD report');
+      setLastAction('Imported CI/CD report');
     }),
 
     vscode.commands.registerCommand('vehicleDebug.analyzeArxml', async () => {
       await analyzeArxml(errorProvider, dtcProvider);
-      sessionProvider.setLastAction('Analyzed ARXML');
+      setLastAction('Analyzed ARXML');
     }),
 
     vscode.commands.registerCommand('vehicleDebug.doipDiscover', async () => {
       await doipDiscover();
-      sessionProvider.setLastAction('DoIP discovery');
+      setLastAction('DoIP discovery');
     })
   );
 
