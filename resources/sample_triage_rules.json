@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "id": "dtc-critical-severity",
+      "description": "Critical severity DTCs",
+      "severity": "critical",
+      "priority": "critical",
+      "actionHint": "Investigate immediately; safety-related fault possible"
+    },
+    {
+      "id": "dtc-powertrain",
+      "dtcPattern": "P0*",
+      "priority": "high",
+      "actionHint": "Powertrain — correlate with freeze frame"
+    },
+    {
+      "id": "dtc-network",
+      "dtcPattern": "U*",
+      "priority": "high",
+      "actionHint": "Network / bus — check communication path"
+    },
+    {
+      "id": "error-safety",
+      "category": "safety_mechanism",
+      "priority": "critical",
+      "actionHint": "Safety mechanism event — do not treat as cosmetic"
+    },
+    {
+      "id": "error-timing",
+      "category": "timing",
+      "priority": "high",
+      "actionHint": "Timing / timeout — verify P2 timing and load"
+    }
+  ]
+}
