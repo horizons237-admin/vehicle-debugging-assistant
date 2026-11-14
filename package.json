@@ -4,443 +4,90 @@
   "description": "Assistant de débogage véhicule : analyse d'erreurs UDS/OBD-II, DTC, logs CAN et diagnostics AUTOSAR pour le développement automobile safety-critical.",
   "version": "0.1.1",
   "publisher": "vehicle-debug",
-  "engines": {
-    "vscode": "^1.85.0"
-  },
-  "categories": [
-    "Debuggers",
-    "Other"
-  ],
-  "keywords": [
-    "automotive",
-    "uds",
-    "obd",
-    "autosar",
-    "diagnostics",
-    "iso26262",
-    "doip"
-  ],
+  "engines": { "vscode": "^1.85.0" },
+  "categories": ["Debuggers", "Other"],
+  "keywords": ["automotive", "uds", "obd", "autosar", "diagnostics", "iso26262", "doip"],
   "activationEvents": [
     "onView:vehicleDebug.dtcView",
+    "onView:vehicleDebug.healthView",
     "onCommand:vehicleDebug.connectEcu",
-    "onCommand:vehicleDebug.disconnectEcu",
+    "onCommand:vehicleDebug.setVin",
+    "onCommand:vehicleDebug.readVinFromDid",
+    "onCommand:vehicleDebug.refreshHealth",
+    "onCommand:vehicleDebug.exportHealthSnapshot",
+    "onCommand:vehicleDebug.openTriageRules",
     "onCommand:vehicleDebug.readDtcs",
-    "onCommand:vehicleDebug.clearDtcs",
     "onCommand:vehicleDebug.analyzeLog",
-    "onCommand:vehicleDebug.readDid",
-    "onCommand:vehicleDebug.showReport",
-    "onCommand:vehicleDebug.refreshViews",
-    "onCommand:vehicleDebug.openSampleLog",
-    "onCommand:vehicleDebug.configureConnections",
-    "onCommand:vehicleDebug.testConnection",
-    "onCommand:vehicleDebug.setConnectionSecret",
-    "onCommand:vehicleDebug.aiAnalyzeSelection",
-    "onCommand:vehicleDebug.aiAnalyzeAll",
-    "onCommand:vehicleDebug.aiAnalyzeError",
-    "onCommand:vehicleDebug.aiAnalyzeDtc",
-    "onCommand:vehicleDebug.createTicketFromError",
-    "onCommand:vehicleDebug.createTicketFromDtc",
-    "onCommand:vehicleDebug.exportConfluence",
-    "onCommand:vehicleDebug.importCicdReport",
-    "onCommand:vehicleDebug.analyzeArxml",
     "onCommand:vehicleDebug.doipDiscover"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
-      {
-        "command": "vehicleDebug.connectEcu",
-        "title": "Connect to ECU",
-        "category": "Vehicle Debug",
-        "icon": "$(plug)"
-      },
-      {
-        "command": "vehicleDebug.disconnectEcu",
-        "title": "Disconnect ECU",
-        "category": "Vehicle Debug",
-        "icon": "$(debug-disconnect)"
-      },
-      {
-        "command": "vehicleDebug.readDtcs",
-        "title": "Read DTCs",
-        "category": "Vehicle Debug",
-        "icon": "$(list-unordered)"
-      },
-      {
-        "command": "vehicleDebug.clearDtcs",
-        "title": "Clear DTCs",
-        "category": "Vehicle Debug",
-        "icon": "$(trash)"
-      },
-      {
-        "command": "vehicleDebug.analyzeLog",
-        "title": "Analyze Log File",
-        "category": "Vehicle Debug",
-        "icon": "$(file-text)"
-      },
-      {
-        "command": "vehicleDebug.readDid",
-        "title": "Read Data Identifier (DID)",
-        "category": "Vehicle Debug",
-        "icon": "$(symbol-key)"
-      },
-      {
-        "command": "vehicleDebug.showReport",
-        "title": "Show Analysis Report",
-        "category": "Vehicle Debug",
-        "icon": "$(report)"
-      },
-      {
-        "command": "vehicleDebug.refreshViews",
-        "title": "Refresh Views",
-        "category": "Vehicle Debug",
-        "icon": "$(refresh)"
-      },
-      {
-        "command": "vehicleDebug.openSampleLog",
-        "title": "Open Sample Trace Log",
-        "category": "Vehicle Debug",
-        "icon": "$(file)"
-      },
-      {
-        "command": "vehicleDebug.configureConnections",
-        "title": "Configure Connections…",
-        "category": "Vehicle Debug",
-        "icon": "$(settings-gear)"
-      },
-      {
-        "command": "vehicleDebug.testConnection",
-        "title": "Test Selected Connection",
-        "category": "Vehicle Debug",
-        "icon": "$(debug-start)"
-      },
-      {
-        "command": "vehicleDebug.setConnectionSecret",
-        "title": "Set Connection Token / Password",
-        "category": "Vehicle Debug",
-        "icon": "$(key)"
-      },
-      {
-        "command": "vehicleDebug.aiAnalyzeSelection",
-        "title": "AI: Analyze Selection / Log",
-        "category": "Vehicle Debug",
-        "icon": "$(sparkle)"
-      },
-      {
-        "command": "vehicleDebug.aiAnalyzeAll",
-        "title": "AI: Analyze All Errors & DTCs",
-        "category": "Vehicle Debug",
-        "icon": "$(sparkle)"
-      },
-      {
-        "command": "vehicleDebug.aiAnalyzeError",
-        "title": "AI: Analyze This Error",
-        "category": "Vehicle Debug",
-        "icon": "$(sparkle)"
-      },
-      {
-        "command": "vehicleDebug.aiAnalyzeDtc",
-        "title": "AI: Analyze This DTC",
-        "category": "Vehicle Debug",
-        "icon": "$(sparkle)"
-      },
-      {
-        "command": "vehicleDebug.createTicketFromError",
-        "title": "Create Ticket from Error",
-        "category": "Vehicle Debug",
-        "icon": "$(issues)"
-      },
-      {
-        "command": "vehicleDebug.createTicketFromDtc",
-        "title": "Create Ticket from DTC",
-        "category": "Vehicle Debug",
-        "icon": "$(issues)"
-      },
-      {
-        "command": "vehicleDebug.exportConfluence",
-        "title": "Export Report to Confluence",
-        "category": "Vehicle Debug",
-        "icon": "$(cloud-upload)"
-      },
-      {
-        "command": "vehicleDebug.importCicdReport",
-        "title": "Import CI/CD Analysis Report",
-        "category": "Vehicle Debug",
-        "icon": "$(cloud-download)"
-      },
-      {
-        "command": "vehicleDebug.analyzeArxml",
-        "title": "Analyze ARXML (DEM/DCM/DTC)",
-        "category": "Vehicle Debug",
-        "icon": "$(file-code)"
-      },
-      {
-        "command": "vehicleDebug.doipDiscover",
-        "title": "DoIP: Vehicle Discovery",
-        "category": "Vehicle Debug",
-        "icon": "$(broadcast)"
-      }
+      { "command": "vehicleDebug.connectEcu", "title": "Connect to ECU", "category": "Vehicle Debug", "icon": "$(plug)" },
+      { "command": "vehicleDebug.disconnectEcu", "title": "Disconnect ECU", "category": "Vehicle Debug", "icon": "$(debug-disconnect)" },
+      { "command": "vehicleDebug.readDtcs", "title": "Read DTCs", "category": "Vehicle Debug", "icon": "$(list-unordered)" },
+      { "command": "vehicleDebug.clearDtcs", "title": "Clear DTCs", "category": "Vehicle Debug", "icon": "$(trash)" },
+      { "command": "vehicleDebug.analyzeLog", "title": "Analyze Log File", "category": "Vehicle Debug", "icon": "$(file-text)" },
+      { "command": "vehicleDebug.readDid", "title": "Read Data Identifier (DID)", "category": "Vehicle Debug", "icon": "$(symbol-key)" },
+      { "command": "vehicleDebug.showReport", "title": "Show Analysis Report", "category": "Vehicle Debug", "icon": "$(report)" },
+      { "command": "vehicleDebug.refreshViews", "title": "Refresh Views", "category": "Vehicle Debug", "icon": "$(refresh)" },
+      { "command": "vehicleDebug.openSampleLog", "title": "Open Sample Trace Log", "category": "Vehicle Debug", "icon": "$(file)" },
+      { "command": "vehicleDebug.configureConnections", "title": "Configure Connections…", "category": "Vehicle Debug", "icon": "$(settings-gear)" },
+      { "command": "vehicleDebug.testConnection", "title": "Test Selected Connection", "category": "Vehicle Debug", "icon": "$(debug-start)" },
+      { "command": "vehicleDebug.setConnectionSecret", "title": "Set Connection Token / Password", "category": "Vehicle Debug", "icon": "$(key)" },
+      { "command": "vehicleDebug.aiAnalyzeSelection", "title": "AI: Analyze Selection / Log", "category": "Vehicle Debug", "icon": "$(sparkle)" },
+      { "command": "vehicleDebug.aiAnalyzeAll", "title": "AI: Analyze All Errors & DTCs", "category": "Vehicle Debug", "icon": "$(sparkle)" },
+      { "command": "vehicleDebug.aiAnalyzeError", "title": "AI: Analyze This Error", "category": "Vehicle Debug", "icon": "$(sparkle)" },
+      { "command": "vehicleDebug.aiAnalyzeDtc", "title": "AI: Analyze This DTC", "category": "Vehicle Debug", "icon": "$(sparkle)" },
+      { "command": "vehicleDebug.createTicketFromError", "title": "Create Ticket from Error", "category": "Vehicle Debug", "icon": "$(issues)" },
+      { "command": "vehicleDebug.createTicketFromDtc", "title": "Create Ticket from DTC", "category": "Vehicle Debug", "icon": "$(issues)" },
+      { "command": "vehicleDebug.exportConfluence", "title": "Export Report to Confluence", "category": "Vehicle Debug", "icon": "$(cloud-upload)" },
+      { "command": "vehicleDebug.importCicdReport", "title": "Import CI/CD Analysis Report", "category": "Vehicle Debug", "icon": "$(cloud-download)" },
+      { "command": "vehicleDebug.analyzeArxml", "title": "Analyze ARXML (DEM/DCM/DTC)", "category": "Vehicle Debug", "icon": "$(file-code)" },
+      { "command": "vehicleDebug.doipDiscover", "title": "DoIP: Vehicle Discovery", "category": "Vehicle Debug", "icon": "$(broadcast)" },
+      { "command": "vehicleDebug.setVin", "title": "Set Vehicle VIN / ID", "category": "Vehicle Debug", "icon": "$(tag)" },
+      { "command": "vehicleDebug.readVinFromDid", "title": "Read VIN (DID F190)", "category": "Vehicle Debug", "icon": "$(key)" },
+      { "command": "vehicleDebug.refreshHealth", "title": "Refresh Vehicle Health", "category": "Vehicle Debug", "icon": "$(heart)" },
+      { "command": "vehicleDebug.exportHealthSnapshot", "title": "Export Health Snapshot", "category": "Vehicle Debug", "icon": "$(export)" },
+      { "command": "vehicleDebug.openTriageRules", "title": "Open / Create Triage Rules", "category": "Vehicle Debug", "icon": "$(symbol-ruler)" }
     ],
     "viewsContainers": {
-      "activitybar": [
-        {
-          "id": "vehicle-debug",
-          "title": "Vehicle Debug",
-          "icon": "media/car.svg"
-        }
-      ]
+      "activitybar": [{ "id": "vehicle-debug", "title": "Vehicle Debug", "icon": "media/car.svg" }]
     },
     "views": {
       "vehicle-debug": [
-        {
-          "id": "vehicleDebug.dtcView",
-          "name": "DTCs"
-        },
-        {
-          "id": "vehicleDebug.errorView",
-          "name": "Errors Analysis"
-        },
-        {
-          "id": "vehicleDebug.sessionView",
-          "name": "Session & Status"
-        },
-        {
-          "id": "vehicleDebug.connectionsView",
-          "name": "Connections"
-        }
+        { "id": "vehicleDebug.healthView", "name": "Vehicle Health", "icon": "$(heart)", "contextualTitle": "Unified health & triage" },
+        { "id": "vehicleDebug.dtcView", "name": "DTCs" },
+        { "id": "vehicleDebug.errorView", "name": "Errors Analysis" },
+        { "id": "vehicleDebug.sessionView", "name": "Session & Status" },
+        { "id": "vehicleDebug.connectionsView", "name": "Connections" }
       ]
     },
     "menus": {
       "view/title": [
-        {
-          "command": "vehicleDebug.refreshViews",
-          "when": "view == vehicleDebug.dtcView || view == vehicleDebug.errorView",
-          "group": "navigation"
-        },
-        {
-          "command": "vehicleDebug.readDtcs",
-          "when": "view == vehicleDebug.dtcView",
-          "group": "navigation"
-        },
-        {
-          "command": "vehicleDebug.configureConnections",
-          "when": "view == vehicleDebug.connectionsView",
-          "group": "navigation"
-        },
-        {
-          "command": "vehicleDebug.testConnection",
-          "when": "view == vehicleDebug.connectionsView",
-          "group": "navigation"
-        }
-      ],
-      "commandPalette": [
-        { "command": "vehicleDebug.connectEcu" },
-        { "command": "vehicleDebug.readDtcs" },
-        { "command": "vehicleDebug.analyzeLog" },
-        { "command": "vehicleDebug.showReport" },
-        { "command": "vehicleDebug.readDid" },
-        { "command": "vehicleDebug.openSampleLog" },
-        { "command": "vehicleDebug.configureConnections" },
-        { "command": "vehicleDebug.testConnection" },
-        { "command": "vehicleDebug.setConnectionSecret" },
-        { "command": "vehicleDebug.aiAnalyzeSelection" },
-        { "command": "vehicleDebug.aiAnalyzeAll" },
-        { "command": "vehicleDebug.exportConfluence" },
-        { "command": "vehicleDebug.importCicdReport" },
-        { "command": "vehicleDebug.analyzeArxml" },
-        { "command": "vehicleDebug.doipDiscover" }
-      ],
-      "view/item/context": [
-        {
-          "command": "vehicleDebug.aiAnalyzeError",
-          "when": "view == vehicleDebug.errorView && viewItem == analyzedError",
-          "group": "inline"
-        },
-        {
-          "command": "vehicleDebug.createTicketFromError",
-          "when": "view == vehicleDebug.errorView && viewItem == analyzedError",
-          "group": "inline"
-        },
-        {
-          "command": "vehicleDebug.aiAnalyzeDtc",
-          "when": "view == vehicleDebug.dtcView && viewItem == dtc",
-          "group": "inline"
-        },
-        {
-          "command": "vehicleDebug.createTicketFromDtc",
-          "when": "view == vehicleDebug.dtcView && viewItem == dtc",
-          "group": "inline"
-        }
+        { "command": "vehicleDebug.refreshViews", "when": "view == vehicleDebug.dtcView || view == vehicleDebug.errorView", "group": "navigation" },
+        { "command": "vehicleDebug.refreshHealth", "when": "view == vehicleDebug.healthView", "group": "navigation" },
+        { "command": "vehicleDebug.exportHealthSnapshot", "when": "view == vehicleDebug.healthView", "group": "navigation" },
+        { "command": "vehicleDebug.readDtcs", "when": "view == vehicleDebug.dtcView", "group": "navigation" },
+        { "command": "vehicleDebug.configureConnections", "when": "view == vehicleDebug.connectionsView", "group": "navigation" }
       ]
     },
     "configuration": {
       "title": "Vehicle Debugging Assistant",
       "properties": {
-        "vehicleDebug.pythonPath": {
-          "type": "string",
-          "default": "python3",
-          "description": "Path to Python interpreter"
-        },
-        "vehicleDebug.pythonTimeoutMs": {
-          "type": "number",
-          "default": 60000,
-          "minimum": 1000,
-          "maximum": 600000,
-          "description": "Maximum time in milliseconds for a single Python backend call (UDS, log analysis, ARXML, DoIP). Process is terminated on timeout."
-        },
-        "vehicleDebug.canInterface": {
-          "type": "string",
-          "default": "socketcan",
-          "enum": ["socketcan", "vector", "pcan", "virtual"],
-          "description": "CAN interface type"
-        },
-        "vehicleDebug.canChannel": {
-          "type": "string",
-          "default": "can0",
-          "description": "CAN channel name"
-        },
-        "vehicleDebug.txId": {
-          "type": "string",
-          "default": "0x7E0",
-          "description": "UDS request CAN ID"
-        },
-        "vehicleDebug.rxId": {
-          "type": "string",
-          "default": "0x7E8",
-          "description": "UDS response CAN ID"
-        },
-        "vehicleDebug.defaultSession": {
-          "type": "string",
-          "default": "extended",
-          "description": "Default UDS diagnostic session"
-        },
-        "vehicleDebug.enableSafetyClassification": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable ASIL impact estimation"
-        },
-        "vehicleDebug.logLevel": {
-          "type": "string",
-          "default": "info",
-          "enum": ["debug", "info", "warn", "error"]
-        },
-        "vehicleDebug.transport": {
-          "type": "string",
-          "default": "can",
-          "enum": ["can", "doip", "simulation"],
-          "description": "Diagnostic transport"
-        },
-        "vehicleDebug.doip.enabled": {
-          "type": "boolean",
-          "default": false
-        },
-        "vehicleDebug.doip.host": {
-          "type": "string",
-          "default": "192.168.0.10"
-        },
-        "vehicleDebug.doip.port": {
-          "type": "number",
-          "default": 13400
-        },
-        "vehicleDebug.doip.logicalAddressTester": {
-          "type": "string",
-          "default": "0x0E00"
-        },
-        "vehicleDebug.doip.logicalAddressEcu": {
-          "type": "string",
-          "default": "0x0E80"
-        },
-        "vehicleDebug.jira.vwif.baseUrl": {
-          "type": "string",
-          "default": ""
-        },
-        "vehicleDebug.jira.vwif.email": {
-          "type": "string",
-          "default": ""
-        },
-        "vehicleDebug.jira.vwif.projectKey": {
-          "type": "string",
-          "default": ""
-        },
-        "vehicleDebug.jira.devstack.baseUrl": {
-          "type": "string",
-          "default": ""
-        },
-        "vehicleDebug.jira.devstack.email": {
-          "type": "string",
-          "default": ""
-        },
-        "vehicleDebug.jira.devstack.projectKey": {
-          "type": "string",
-          "default": ""
-        },
-        "vehicleDebug.confluence.vwif.baseUrl": {
-          "type": "string",
-          "default": ""
-        },
-        "vehicleDebug.confluence.vwif.spaceKey": {
-          "type": "string",
-          "default": ""
-        },
-        "vehicleDebug.confluence.devstack.baseUrl": {
-          "type": "string",
-          "default": ""
-        },
-        "vehicleDebug.confluence.devstack.spaceKey": {
-          "type": "string",
-          "default": ""
-        },
-        "vehicleDebug.codebeamer.baseUrl": {
-          "type": "string",
-          "default": ""
-        },
-        "vehicleDebug.codebeamer.username": {
-          "type": "string",
-          "default": ""
-        },
-        "vehicleDebug.codebeamer.projectId": {
-          "type": "string",
-          "default": ""
-        },
-        "vehicleDebug.llm.local.enabled": {
-          "type": "boolean",
-          "default": false
-        },
-        "vehicleDebug.llm.local.baseUrl": {
-          "type": "string",
-          "default": "http://localhost:11434"
-        },
-        "vehicleDebug.llm.local.model": {
-          "type": "string",
-          "default": "llama3.1"
-        },
-        "vehicleDebug.llm.local.apiStyle": {
-          "type": "string",
-          "default": "ollama",
-          "enum": ["ollama", "openai-compat"]
-        },
-        "vehicleDebug.llm.remote.enabled": {
-          "type": "boolean",
-          "default": false
-        },
-        "vehicleDebug.llm.remote.baseUrl": {
-          "type": "string",
-          "default": "https://api.openai.com/v1"
-        },
-        "vehicleDebug.llm.remote.model": {
-          "type": "string",
-          "default": "gpt-4o"
-        },
-        "vehicleDebug.llm.remote.provider": {
-          "type": "string",
-          "default": "openai",
-          "enum": ["openai", "azure", "anthropic", "custom"]
-        },
-        "vehicleDebug.llm.allowRemoteDataUpload": {
-          "type": "boolean",
-          "default": false,
-          "description": "Allow sending diagnostic excerpts (logs, DTCs, errors) to a remote LLM. Default false (opt-in). Prefer local LLM for sensitive data."
-        }
+        "vehicleDebug.pythonPath": { "type": "string", "default": "python3" },
+        "vehicleDebug.pythonTimeoutMs": { "type": "number", "default": 60000, "minimum": 1000, "maximum": 600000 },
+        "vehicleDebug.canInterface": { "type": "string", "default": "socketcan", "enum": ["socketcan", "vector", "pcan", "virtual"] },
+        "vehicleDebug.canChannel": { "type": "string", "default": "can0" },
+        "vehicleDebug.txId": { "type": "string", "default": "0x7E0" },
+        "vehicleDebug.rxId": { "type": "string", "default": "0x7E8" },
+        "vehicleDebug.defaultSession": { "type": "string", "default": "extended" },
+        "vehicleDebug.enableSafetyClassification": { "type": "boolean", "default": true },
+        "vehicleDebug.transport": { "type": "string", "default": "can", "enum": ["can", "doip", "simulation"] },
+        "vehicleDebug.doip.enabled": { "type": "boolean", "default": false },
+        "vehicleDebug.doip.host": { "type": "string", "default": "192.168.0.10" },
+        "vehicleDebug.doip.port": { "type": "number", "default": 13400 },
+        "vehicleDebug.llm.allowRemoteDataUpload": { "type": "boolean", "default": false, "description": "Allow sending diagnostic excerpts to a remote LLM (opt-in)." }
       }
     }
   },
