@@ -20,12 +20,10 @@ export class SessionStatusProvider implements vscode.TreeDataProvider<StatusItem
     this._onDidChangeTreeData.fire();
   }
 
-  /** @deprecated State comes from sessionStore; kept for extension.ts compatibility */
   setConnected(_value: boolean): void {
     this.refresh();
   }
 
-  /** @deprecated Prefer setLastAction on sessionStore */
   setLastAction(_action: string): void {
     this.refresh();
   }
@@ -46,6 +44,7 @@ export class SessionStatusProvider implements vscode.TreeDataProvider<StatusItem
         s.connected ? `Connected (${modeLabel})` : 'Disconnected',
         s.connected ? 'check' : 'circle-slash'
       ),
+      new StatusItem('VIN / Vehicle', s.vin || s.vehicleId || '—', 'tag'),
       new StatusItem('Session', s.sessionName || 'None', 'symbol-namespace'),
       new StatusItem('Transport', s.transport === 'none' ? '—' : s.transport, 'radio-tower'),
       new StatusItem('Interface', `${config.canInterface} / ${config.canChannel}`, 'plug'),
