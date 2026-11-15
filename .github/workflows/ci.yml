@@ -5,11 +5,16 @@ on:
     branches: [main, master]
   pull_request:
     branches: [main, master]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
 
     steps:
       - name: Checkout
@@ -38,9 +43,53 @@ jobs:
       - name: Install pytest
         run: pip install pytest
 
-      - name: Run Python smoke tests
+      - name: Run Python tests
         run: python3 -m pytest tests/ -v --tb=short
 
-      - name: Lint (optional)
+      - name: Validate sample CI/CD report
+        run: python3 scripts/validate_cicd_report.py resources/sample_cicd_report.json
+
+      - name: Lint TypeScript
         run: npm run lint --if-present
         continue-on-error: true
+
+      - name: Package VSIX (smoke)
+        run: |
+          npx @vscode/vsce package --no-dependencies -o "vehicle-debugging-assistant-ci.vsix"
+          ls -la vehicle-debugging-assistant-ci.vsix
+
+      - name: Upload VSIX artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vsix-ci-${{ github.sha }}
+          path: vehicle-debugging-assistant-ci.vsix
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Upload sample CI/CD report
+        uses: actions/upload-artifact@v4
+        with:
+          name: sample-cicd-report
+          path: resources/sample_cicd_report.json
+          retention-days: 14
+
+  sdlc-docs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Required SDLC files
+        run: |
+          for f in \
+            docs/PLANNING.md \
+            docs/REQUIREMENTS.md \
+            docs/TRACEABILITY.md \
+            docs/TEST_PLAN.md \
+            docs/MAINTENANCE.md \
+            docs/CICD.md \
+            CHANGELOG.md \
+            LICENSE
+          do
+            test -f "$f" || { echo "Missing $f"; exit 1; }
+          done
+          echo "SDLC docs present"

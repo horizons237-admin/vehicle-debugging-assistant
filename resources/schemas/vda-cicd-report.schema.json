@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/horizons237-admin/vehicle-debugging-assistant/schemas/vda-cicd-report.json",
+  "title": "Vehicle Debugging Assistant CI/CD Analysis Report",
+  "type": "object",
+  "properties": {
+    "meta": {
+      "type": "object",
+      "properties": {
+        "pipeline": { "type": "string" },
+        "build": { "type": "string" },
+        "commit": { "type": "string" },
+        "generatedAt": { "type": "string" },
+        "tool": { "type": "string" }
+      }
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["description"],
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": ["software_bug", "communication", "safety_mechanism", "configuration", "timing", "unknown"]
+          },
+          "severity": { "type": "string", "enum": ["critical", "major", "minor"] },
+          "asilImpact": { "type": "string" },
+          "source": { "type": "string" },
+          "description": { "type": "string" },
+          "recommendation": { "type": "string" },
+          "evidence": {}
+        }
+      }
+    },
+    "dtcs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["code"],
+        "properties": {
+          "code": { "type": "string" },
+          "status": { "type": "string" },
+          "description": { "type": "string" },
+          "severity": { "type": "string", "enum": ["critical", "major", "minor", "info"] },
+          "freezeFrame": { "type": "string" }
+        }
+      }
+    },
+    "issues": {
+      "type": "array",
+      "description": "Optional Sonar-like issues mapped heuristically by the extension"
+    }
+  },
+  "anyOf": [
+    { "required": ["errors"] },
+    { "required": ["dtcs"] },
+    { "required": ["issues"] }
+  ]
+}
