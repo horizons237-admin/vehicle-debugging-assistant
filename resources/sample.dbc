@@ -1,0 +1,12 @@
+VERSION ""
+
+BS_:
+
+BU_: ECM TCM Gateway
+
+BO_ 256 EngineStatus: 8 ECM
+ SG_ EngineRPM : 0|16@1+ (0.25,0) [0|16000] "rpm" ECM
+ SG_ VehicleSpeed : 16|16@1+ (0.01,0) [0|300] "km/h" ECM
+
+BO_ 512 BodyStatus: 8 Gateway
+ SG_ DoorAjar : 0|1@1+ (1,0) [0|1] "" Gateway
