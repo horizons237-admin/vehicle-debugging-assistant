@@ -1,0 +1,70 @@
+# GitLab Runner on Kubernetes — chart: gitlab/gitlab-runner
+# helm upgrade --install vda-runner gitlab/gitlab-runner -n gitlab-runner --create-namespace -f values.yaml
+
+gitlabUrl: https://gitlab.example.com/
+runnerRegistrationToken: "REPLACE_WITH_REGISTRATION_TOKEN"
+# Prefer GitLab 16+ runnerToken (glrt-…) via --set runnerToken=...
+
+rbac:
+  create: true
+
+serviceAccount:
+  create: true
+  name: vda-gitlab-runner
+
+replicas: 1
+concurrent: 4
+checkInterval: 5
+
+metrics:
+  enabled: true
+  port: 9252
+
+runners:
+  name: vda-k8s
+  tags: "k8s,vda,kubernetes"
+  runUntagged: true
+  locked: false
+  config: |
+    [[runners]]
+      name = "vda-k8s"
+      url = "%(gitlabUrl)s"
+      executor = "kubernetes"
+      environment = ["FF_USE_FASTZIP=true", "ARTIFACT_COMPRESSION_LEVEL=fast"]
+      [runners.kubernetes]
+        namespace = "gitlab-runner"
+        image = "alpine:3.20"
+        privileged = false
+        poll_interval = 3
+        poll_timeout = 180
+        cpu_request = "250m"
+        cpu_limit = "2"
+        memory_request = "512Mi"
+        memory_limit = "2Gi"
+        service_cpu_request = "100m"
+        service_memory_request = "128Mi"
+        helper_cpu_request = "100m"
+        helper_memory_request = "128Mi"
+        cleanup_grace_period_seconds = 30
+        pod_termination_grace_period_seconds = 30
+        [runners.kubernetes.pod_labels]
+          app = "vda-ci-job"
+          team = "vehicle-debug"
+        [runners.kubernetes.pod_annotations]
+          "cluster-autoscaler.kubernetes.io/safe-to-evict" = "false"
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 256Mi
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop: ["ALL"]
+
+image:
+  pullPolicy: IfNotPresent

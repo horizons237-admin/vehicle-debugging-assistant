@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: vda-runner-cache
+  namespace: gitlab-runner
+  labels:
+    app: vda-gitlab-runner
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 20Gi
+  # storageClassName: your-rwx-class
