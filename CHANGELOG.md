@@ -1,14 +1,13 @@
 # Changelog
 
-## [0.2.4] — 2026-11-15
+## [0.2.5] — 2026-11-15
 
-### Added (standards multi-marque lab)
-- ODX lab parser + sample.odx (DTC/DID/layer extract)
-- UDS 0x19 extended sub-functions (01/02/04/06/0A) simulation
-- OBD-II readiness monitors (Mode 01 PID 01 lab)
-- J2534 Pass-Thru status stub (interface documented, no vendor DLL)
+### Added (standards suite continued)
+- J2012 / ISO 15031-6 lab DTC catalog + enrich pipeline
+- Apply ODX DTCs to DTC tree view
+- OBD Mode 09 (VIN, CALID, CVN, IPT lab)
+- D-PDU API status stub (ISO 22900)
 
-## [0.2.3] — Self diagnostic live status
-## [0.2.2] — P2 DBC, dashboard, i18n, CI watch
-## [0.2.1] — P1 multi-ECU, DoIP E2E, audit
-## [0.2.0] — P0 OBD-II, unit tests, CAN errors
+## [0.2.4] — ODX parser, UDS 0x19, OBD readiness, J2534 stub
+## [0.2.3] — Self diagnostic
+## [0.2.2]–[0.2.0] — P2–P0 lab features
