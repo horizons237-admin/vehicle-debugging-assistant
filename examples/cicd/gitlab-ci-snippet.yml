@@ -1,33 +1,85 @@
-# Snippet: produce Vehicle Debugging Assistant report from GitLab CI
+# Example ECU / product pipeline → VDA-compatible report artifact
+# Import in VS Code: "Vehicle Debug: Import CI/CD Analysis Report"
+
 stages:
   - analyze
+  - aggregate
   - publish
 
-vda_report:
-  stage: publish
+variables:
+  VDA_REPORT_PATH: "out/vda-cicd-report.json"
+
+misra_scan:
+  stage: analyze
   image: python:3.11-slim
+  script:
+    - mkdir -p out/partial
+    - |
+      python - <<'PY'
+      import json
+      partial = {
+        "errors": [
+          {
+            "category": "software_bug",
+            "severity": "major",
+            "source": "misra",
+            "description": "Example MISRA finding from pipeline (replace with real tool output)",
+            "recommendation": "Fix or document deviation",
+            "evidence": {"tool": "misra-example"}
+          }
+        ]
+      }
+      open("out/partial/misra.json", "w", encoding="utf-8").write(json.dumps(partial, indent=2))
+      PY
+  artifacts:
+    paths:
+      - out/partial/misra.json
+    expire_in: 7 days
+
+unit_tests:
+  stage: analyze
+  image: python:3.11-slim
+  script:
+    - mkdir -p out/partial
+    - echo '{"errors":[],"dtcs":[]}' > out/partial/unit.json
+  artifacts:
+    paths:
+      - out/partial/unit.json
+    expire_in: 7 days
+
+aggregate_vda_report:
+  stage: aggregate
+  image: python:3.11-slim
+  needs: ["misra_scan", "unit_tests"]
   script:
     - mkdir -p out
     - |
       python - <<'PY'
-      import json, os, datetime
+      import json, os, datetime, glob
+      errors, dtcs = [], []
+      for path in glob.glob("out/partial/*.json"):
+          data = json.load(open(path, encoding="utf-8"))
+          errors.extend(data.get("errors") or [])
+          dtcs.extend(data.get("dtcs") or [])
       report = {
         "meta": {
           "pipeline": os.environ.get("CI_PIPELINE_ID", "local"),
           "build": os.environ.get("CI_JOB_ID", "0"),
-          "commit": os.environ.get("CI_COMMIT_SHA", "unknown")[:12],
+          "commit": (os.environ.get("CI_COMMIT_SHA") or "unknown")[:12],
           "generatedAt": datetime.datetime.utcnow().isoformat() + "Z",
-          "tool": "gitlab-ci"
+          "tool": "gitlab-ecu-aggregate",
+          "project": os.environ.get("CI_PROJECT_PATH", ""),
         },
-        "errors": [],
-        "dtcs": []
+        "errors": errors,
+        "dtcs": dtcs,
       }
-      path = "out/vda-cicd-report.json"
+      path = os.environ.get("VDA_REPORT_PATH", "out/vda-cicd-report.json")
       with open(path, "w", encoding="utf-8") as f:
           json.dump(report, f, indent=2)
-      print("Wrote", path)
+      print("Wrote", path, "errors=", len(errors), "dtcs=", len(dtcs))
       PY
   artifacts:
+    name: "vda-cicd-report-$CI_COMMIT_SHORT_SHA"
     paths:
       - out/vda-cicd-report.json
     expire_in: 30 days

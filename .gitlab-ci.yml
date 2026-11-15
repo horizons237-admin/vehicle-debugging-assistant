@@ -1,0 +1,177 @@
+# Vehicle Debugging Assistant — GitLab CI/CD
+# Mirrors GitHub Actions: compile, pytest, report validation, VSIX package, SDLC checks.
+
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_COMMIT_TAG
+    - if: $CI_PIPELINE_SOURCE == "web"
+
+stages:
+  - build
+  - test
+  - validate
+  - package
+  - release
+
+variables:
+  npm_config_cache: "$CI_PROJECT_DIR/.npm"
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+  NODE_VERSION: "20"
+  PYTHON_VERSION: "3.11"
+
+default:
+  interruptible: true
+
+compile:
+  stage: build
+  image: node:${NODE_VERSION}-bookworm
+  cache:
+    key:
+      files:
+        - package-lock.json
+      prefix: npm
+    paths:
+      - .npm/
+      - node_modules/
+  script:
+    - node -v && npm -v
+    - npm ci || npm install
+    - npm run compile
+    - test -d out
+  artifacts:
+    name: "compiled-$CI_COMMIT_SHORT_SHA"
+    paths:
+      - out/
+      - node_modules/
+      - package.json
+      - package-lock.json
+    expire_in: 1 day
+    when: on_success
+
+test:python:junit:
+  stage: test
+  image: python:${PYTHON_VERSION}-slim
+  needs: []
+  script:
+    - pip install --quiet pytest
+    - python -m py_compile src/python/*.py
+    - python -m pytest tests/ -v --tb=short --junitxml=junit.xml
+  artifacts:
+    when: always
+    reports:
+      junit: junit.xml
+    paths:
+      - junit.xml
+    expire_in: 14 days
+
+lint:ts:
+  stage: test
+  image: node:${NODE_VERSION}-bookworm
+  needs: ["compile"]
+  allow_failure: true
+  script:
+    - npm ci || npm install
+    - npm run lint --if-present
+
+validate:cicd-report:
+  stage: validate
+  image: python:${PYTHON_VERSION}-slim
+  needs: []
+  script:
+    - python scripts/validate_cicd_report.py resources/sample_cicd_report.json
+  artifacts:
+    paths:
+      - resources/sample_cicd_report.json
+      - resources/schemas/vda-cicd-report.schema.json
+    expire_in: 14 days
+
+validate:sdlc-docs:
+  stage: validate
+  image: alpine:3.20
+  needs: []
+  script:
+    - |
+      for f in \
+        docs/PLANNING.md \
+        docs/REQUIREMENTS.md \
+        docs/TRACEABILITY.md \
+        docs/TEST_PLAN.md \
+        docs/MAINTENANCE.md \
+        docs/CICD.md \
+        CHANGELOG.md \
+        LICENSE \
+        .gitlab-ci.yml
+      do
+        test -f "$f" || { echo "Missing $f"; exit 1; }
+      done
+      echo "SDLC docs + GitLab CI present"
+
+package:vsix:
+  stage: package
+  image: node:${NODE_VERSION}-bookworm
+  needs: ["compile", "test:python:junit", "validate:cicd-report"]
+  script:
+    - npm ci || npm install
+    - npm run compile
+    - npx @vscode/vsce package --no-dependencies -o "vehicle-debugging-assistant-${CI_COMMIT_TAG:-$CI_COMMIT_SHORT_SHA}.vsix"
+    - ls -la *.vsix
+    - |
+      V="${CI_COMMIT_TAG:-$CI_COMMIT_SHORT_SHA}"
+      V="${V#v}"
+      cp vehicle-debugging-assistant-*.vsix "vehicle-debugging-assistant-${V}-linux.vsix" || true
+      cp vehicle-debugging-assistant-*.vsix "vehicle-debugging-assistant-${V}-windows.vsix" || true
+  artifacts:
+    name: "vsix-$CI_COMMIT_SHORT_SHA"
+    paths:
+      - "*.vsix"
+    expire_in: 30 days
+
+emit:vda-report-template:
+  stage: package
+  image: python:${PYTHON_VERSION}-slim
+  needs: []
+  script:
+    - mkdir -p out
+    - |
+      python - <<'PY'
+      import json, os, datetime
+      report = {
+        "meta": {
+          "pipeline": os.environ.get("CI_PIPELINE_ID", "local"),
+          "build": os.environ.get("CI_JOB_ID", "0"),
+          "commit": (os.environ.get("CI_COMMIT_SHA") or "unknown")[:12],
+          "generatedAt": datetime.datetime.utcnow().isoformat() + "Z",
+          "tool": "gitlab-ci-vda",
+          "ref": os.environ.get("CI_COMMIT_REF_NAME", ""),
+        },
+        "errors": [],
+        "dtcs": [],
+      }
+      path = "out/vda-cicd-report.json"
+      with open(path, "w", encoding="utf-8") as f:
+          json.dump(report, f, indent=2)
+      print("Wrote", path)
+      PY
+    - python scripts/validate_cicd_report.py out/vda-cicd-report.json
+  artifacts:
+    name: "vda-report-$CI_COMMIT_SHORT_SHA"
+    paths:
+      - out/vda-cicd-report.json
+    expire_in: 30 days
+
+release:vsix:
+  stage: release
+  image: node:${NODE_VERSION}-bookworm
+  needs: ["package:vsix"]
+  rules:
+    - if: $CI_COMMIT_TAG
+  script:
+    - echo "Release artifacts for tag $CI_COMMIT_TAG"
+    - ls -la *.vsix || ls -la vehicle-debugging-assistant-*.vsix
+  artifacts:
+    name: "release-$CI_COMMIT_TAG"
+    paths:
+      - "*.vsix"
+    expire_in: 90 days
