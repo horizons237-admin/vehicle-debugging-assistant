@@ -1,0 +1,28 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Vehicle Debugging Assistant — Remote Diagnostics Mock",
+    "version": "0.1.0",
+    "description": "Lab mock API aligned with P1 remote diagnostics adapter. Analysis only."
+  },
+  "paths": {
+    "/v1/vehicles/{vin}/health": {
+      "get": {
+        "summary": "Vehicle health (DTCs + status signals)",
+        "parameters": [
+          {
+            "name": "vin",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Health payload"
+          }
+        }
+      }
+    }
+  }
+}
