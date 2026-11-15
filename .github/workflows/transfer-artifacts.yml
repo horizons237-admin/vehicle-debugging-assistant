@@ -14,21 +14,65 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
+
       - name: Build package if needed
         run: |
           npm ci || npm install
           npm run compile
           npx --yes @vscode/vsce@2.22.0 package --no-dependencies -o "vehicle-debugging-assistant-$(node -p "require('./package.json').version").vsix" || true
+
       - name: Stage artifacts
         run: |
           bash scripts/transfer_artifacts.sh list
           bash scripts/transfer_artifacts.sh staging
+
       - name: Upload transfer bundle
         uses: actions/upload-artifact@v4
         with:
           name: vda-transfer-${{ github.sha }}
           path: out/transfer/
           retention-days: 30
+
+      - name: Detect remote SSH secrets
+        id: ssh
+        env:
+          KEY: ${{ secrets.VDA_SSH_PRIVATE_KEY }}
+          REMOTE: ${{ secrets.VDA_REMOTE }}
+        run: |
+          if [ -n "$KEY" ] && [ -n "$REMOTE" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "Remote rsync skipped (set VDA_SSH_PRIVATE_KEY, VDA_REMOTE, VDA_SSH_KNOWN_HOSTS)"
+          fi
+
+      - name: Remote rsync (hardened SSH)
+        if: steps.ssh.outputs.enabled == 'true'
+        env:
+          VDA_SSH_PRIVATE_KEY: ${{ secrets.VDA_SSH_PRIVATE_KEY }}
+          VDA_SSH_KNOWN_HOSTS: ${{ secrets.VDA_SSH_KNOWN_HOSTS }}
+          VDA_REMOTE: ${{ secrets.VDA_REMOTE }}
+        run: |
+          set -euo pipefail
+          if [ -z "${VDA_SSH_KNOWN_HOSTS:-}" ]; then
+            echo "::error::VDA_SSH_KNOWN_HOSTS is required (ssh-keyscan -t ed25519 <host>)"
+            exit 1
+          fi
+          # shellcheck disable=SC1091
+          source scripts/ssh_secure_env.sh
+          trap cleanup_ssh EXIT
+          bash scripts/transfer_artifacts.sh rsync
+
+      - name: Ensure no key left in workspace
+        if: always()
+        run: |
+          rm -rf "${RUNNER_TEMP}"/vda-ssh-* 2>/dev/null || true
+          if find "$GITHUB_WORKSPACE" \( -name 'id_ed25519' -o -name 'id_rsa' \) 2>/dev/null | grep -q .; then
+            echo "::error::Unexpected private key file in workspace"
+            exit 1
+          fi
+          echo "Workspace clear of private keys"
