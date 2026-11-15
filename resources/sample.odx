@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ODX MODEL-VERSION="2.2.0">
+  <DIAG-LAYER-CONTAINER>
+    <SHORT-NAME>Engine_ECM</SHORT-NAME>
+    <DIAG-LAYER>
+      <SHORT-NAME>ECM_UDS</SHORT-NAME>
+      <PROTOCOL>UDS_ON_CAN</PROTOCOL>
+      <REQUEST-ID>0x7E0</REQUEST-ID>
+      <RESPONSE-ID>0x7E8</RESPONSE-ID>
+      <DTC-DOPS>
+        <DTC SHORT-NAME="P0301" TROUBLE-CODE="0x0301" DISPLAY="P0301" TEXT="Cylinder 1 Misfire Detected" LEVEL="FAIL"/>
+        <DTC SHORT-NAME="U0100" TROUBLE-CODE="0xC100" DISPLAY="U0100" TEXT="Lost Communication with ECM/PCM A" LEVEL="FAIL"/>
+        <DTC SHORT-NAME="P0420" TROUBLE-CODE="0x0420" DISPLAY="P0420" TEXT="Catalyst System Efficiency Below Threshold Bank 1" LEVEL="FAIL"/>
+      </DTC-DOPS>
+      <DATA-OBJECT-PROPS>
+        <DOP SHORT-NAME="VIN" ID="0xF190" CATEGORY="IDENT"/>
+        <DOP SHORT-NAME="EngineRPM" ID="0xF40C" CATEGORY="MEASUREMENT" UNIT="rpm"/>
+        <DOP SHORT-NAME="VehicleSpeed" ID="0xF40D" CATEGORY="MEASUREMENT" UNIT="km/h"/>
+      </DATA-OBJECT-PROPS>
+      <DIAG-COMMS>
+        <SERVICE SID="0x19" NAME="ReadDTCInformation"/>
+        <SERVICE SID="0x22" NAME="ReadDataByIdentifier"/>
+        <SERVICE SID="0x14" NAME="ClearDiagnosticInformation"/>
+      </DIAG-COMMS>
+    </DIAG-LAYER>
+  </DIAG-LAYER-CONTAINER>
+</ODX>
