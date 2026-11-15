@@ -1,5 +1,5 @@
 # Vehicle Debugging Assistant — GitLab CI (runner-optimized)
-# Goals: short wall-clock, small artifacts, high cache hit rate, DAG via needs.
+# Works with Docker and Kubernetes executors (docs/GITLAB_K8S_RUNNERS.md).
 
 workflow:
   rules:
@@ -29,6 +29,14 @@ variables:
   npm_config_fund: "false"
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
   PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  KUBERNETES_PULL_POLICY: "if-not-present"
+  KUBERNETES_CPU_REQUEST: "250m"
+  KUBERNETES_CPU_LIMIT: "2"
+  KUBERNETES_MEMORY_REQUEST: "512Mi"
+  KUBERNETES_MEMORY_LIMIT: "2Gi"
+  KUBERNETES_HELPER_CPU_REQUEST: "100m"
+  KUBERNETES_HELPER_MEMORY_REQUEST: "128Mi"
+  KUBERNETES_POD_LABELS: "app=vda-ci-job"
 
 default:
   interruptible: true
@@ -149,6 +157,11 @@ validate:sdlc-docs:
 package:vsix:
   stage: package
   image: node:${NODE_VERSION}-bookworm-slim
+  variables:
+    KUBERNETES_CPU_REQUEST: "500m"
+    KUBERNETES_CPU_LIMIT: "2"
+    KUBERNETES_MEMORY_REQUEST: "1Gi"
+    KUBERNETES_MEMORY_LIMIT: "3Gi"
   needs:
     - job: compile
       artifacts: true
