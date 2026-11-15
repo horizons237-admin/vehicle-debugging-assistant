@@ -1,0 +1,34 @@
+name: Transfer artifacts
+
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  transfer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Build package if needed
+        run: |
+          npm ci || npm install
+          npm run compile
+          npx --yes @vscode/vsce@2.22.0 package --no-dependencies -o "vehicle-debugging-assistant-$(node -p "require('./package.json').version").vsix" || true
+      - name: Stage artifacts
+        run: |
+          bash scripts/transfer_artifacts.sh list
+          bash scripts/transfer_artifacts.sh staging
+      - name: Upload transfer bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: vda-transfer-${{ github.sha }}
+          path: out/transfer/
+          retention-days: 30
