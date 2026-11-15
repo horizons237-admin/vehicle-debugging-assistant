@@ -1,16 +1,14 @@
 # Vehicle Debugging Assistant
 
 **Extension Visual Studio Code** pour l’analyse d’erreurs dans le développement automobile  
-*(UDS · OBD-II · AUTOSAR · DoIP · ISO 26262)*
+*(UDS · OBD-II · AUTOSAR · DoIP · ISO 26262 — aide à l’analyse)*
 
 | | |
 |---|---|
 | **Version** | 0.1.1 |
 | **Licence** | MIT |
 | **Dépôt** | [horizons237-admin/vehicle-debugging-assistant](https://github.com/horizons237-admin/vehicle-debugging-assistant) |
-| **Éditeur** | `vehicle-debug` |
-
----
+| **Présentation** | `Vehicle_Debugging_Assistant_Presentation.pptx` (racine du dépôt) |
 
 ## Mission
 
@@ -20,29 +18,23 @@ Centraliser dans VS Code le **diagnostic**, l’**analyse** et la **traçabilit�
 
 | Page | Contenu |
 |------|---------|
-| [Installation](Installation) | Prérequis, clone, compile, F5, VSIX |
-| [Guide utilisateur](User-Guide) | Interface, workflows, mode simulation |
-| [Commandes](Commands) | Catalogue des 22 commandes |
-| [Architecture](Architecture) | Couches TS / Python / protocoles |
+| [Installation](Installation) | Prérequis, F5, VSIX |
+| [Guide utilisateur](User-Guide) | Workflows lab, Health, Status |
+| [Commandes](Commands) | Catalogue des commandes |
+| [Architecture](Architecture) | Couches TS / Python |
 | [Connexions](Connections) | Jira, Confluence, CodeBeamer, LLM |
-| [Configuration](Configuration) | Settings `vehicleDebug.*` et secrets |
-| [Safety](Safety) | ISO 26262, limites ASIL, bonnes pratiques |
-| [Dépannage](Troubleshooting) | Erreurs fréquentes et solutions |
-| [Développement](Development) | Structure du code, contribution |
-| [Feuille de route](Roadmap) | P0–P3, versions cibles |
+| [Configuration](Configuration) | Settings `vehicleDebug.*` |
+| [CI/CD](CICD) | GitHub, GitLab, K8s, format rapport |
+| [Safety](Safety) | Limites ASIL, gouvernance |
+| [SDLC](SDLC) | Planning, exigences, tests, maintenance |
+| [Dépannage](Troubleshooting) | Erreurs fréquentes |
+| [Développement](Development) | Structure du code |
+| [Feuille de route](Roadmap) | P0–P3, jalons 0.2 / 0.3 |
 
-## Périmètre fonctionnel
+## Périmètre 0.1.1
 
-- Lecture / effacement **DTC** (freeze frames)
-- Analyse de **logs / traces** CAN
-- Parsing **ARXML** (DEM / DCM / DTC)
-- Import de rapports **CI/CD** JSON
-- Assistance **LLM** (local ou distant)
-- Tickets **Jira** (VWIF / DevStack) et **CodeBeamer**
-- Export **Confluence**
-- Découverte **DoIP** (ISO 13400)
-- Mode **simulation** sans hardware
+Health/VIN/triage, status DIDs, remote mock, SOVD, timeline, anomaly, gouvernance, partner packs, fleet offline, OTA, checklist UN R155, incident pack, EV, import CI/CD, ALM, LLM opt-in.
 
-## Avertissement safety
+## Safety
 
-Les estimations ASIL et les analyses IA sont **indicatives**. Elles ne remplacent pas une analyse de sécurité formelle ni un outil qualifié (ISO 26262).
+Indicatif uniquement — pas confirmation ASIL, pas VSOC, pas eCall.

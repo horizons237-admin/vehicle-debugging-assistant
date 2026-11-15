@@ -7,11 +7,13 @@
 - [Architecture](Architecture)
 - [Connexions](Connections)
 - [Configuration](Configuration)
+- [CI/CD](CICD)
 - [Safety](Safety)
+- [SDLC](SDLC)
 - [Dépannage](Troubleshooting)
 - [Développement](Development)
 - [Feuille de route](Roadmap)
 
 ---
 [Dépôt GitHub](https://github.com/horizons237-admin/vehicle-debugging-assistant)  
-[Guide docs/](https://github.com/horizons237-admin/vehicle-debugging-assistant/blob/main/docs/GUIDE.md)
+[docs/](https://github.com/horizons237-admin/vehicle-debugging-assistant/tree/main/docs)

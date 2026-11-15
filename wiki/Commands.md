@@ -1,51 +1,18 @@
-# Catalogue des commandes
+# Commandes
 
-Toutes les commandes sont préfixées **Vehicle Debug** dans la palette (`Ctrl+Shift+P` / `Cmd+Shift+P`).
+Palette : **Ctrl+Shift+P** → `Vehicle Debug:`.
 
-## Connexion & diagnostic
+## Diagnostic
+Connect / Disconnect ECU, Read/Clear DTCs, Read DID, Read Vehicle Status, Read EV Status, Analyze Log, Analyze ARXML, DoIP Discovery.
 
-| Commande | ID |
-|----------|-----|
-| Connect to ECU | `vehicleDebug.connectEcu` |
-| Disconnect ECU | `vehicleDebug.disconnectEcu` |
-| Read DTCs | `vehicleDebug.readDtcs` |
-| Clear DTCs | `vehicleDebug.clearDtcs` |
-| Read Data Identifier (DID) | `vehicleDebug.readDid` |
-| DoIP: Vehicle Discovery | `vehicleDebug.doipDiscover` |
+## Health & identité
+Set VIN, Read VIN F190, Refresh Health, Export Health Snapshot, Triage Rules, Session Timeline.
 
-## Analyse
+## P2
+Anomaly Assist, Governance Panel / Self-Test, Partner Pack, Offline Fleet Rank.
 
-| Commande | ID |
-|----------|-----|
-| Analyze Log File | `vehicleDebug.analyzeLog` |
-| Open Sample Trace Log | `vehicleDebug.openSampleLog` |
-| Analyze ARXML (DEM/DCM/DTC) | `vehicleDebug.analyzeArxml` |
-| Import CI/CD Analysis Report | `vehicleDebug.importCicdReport` |
-| Show Analysis Report | `vehicleDebug.showReport` |
-| Refresh Views | `vehicleDebug.refreshViews` |
+## P3
+OTA Correlation, Open OTA Campaigns, UN R155 Checklist, Lab Incident Pack.
 
-## Intelligence artificielle
-
-| Commande | ID |
-|----------|-----|
-| AI: Analyze Selection / Log | `vehicleDebug.aiAnalyzeSelection` |
-| AI: Analyze All Errors & DTCs | `vehicleDebug.aiAnalyzeAll` |
-| AI: Analyze This Error | `vehicleDebug.aiAnalyzeError` |
-| AI: Analyze This DTC | `vehicleDebug.aiAnalyzeDtc` |
-
-## ALM & documentation
-
-| Commande | ID |
-|----------|-----|
-| Configure Connections… | `vehicleDebug.configureConnections` |
-| Test Selected Connection | `vehicleDebug.testConnection` |
-| Set Connection Token / Password | `vehicleDebug.setConnectionSecret` |
-| Create Ticket from Error | `vehicleDebug.createTicketFromError` |
-| Create Ticket from DTC | `vehicleDebug.createTicketFromDtc` |
-| Export Report to Confluence | `vehicleDebug.exportConfluence` |
-
-## Menus contextuels
-
-- Vue **Errors** : analyser IA / créer ticket sur un item
-- Vue **DTCs** : analyser IA / créer ticket sur un DTC
-- Titre des vues : refresh, read DTCs, configure / test connection
+## ALM / AI / CI
+AI Analyze, Create Ticket, Export Confluence, Import CI/CD Report, Configure Connections, Remote Diagnostics, SOVD Discover.
