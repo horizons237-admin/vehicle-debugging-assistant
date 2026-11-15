@@ -1,0 +1,30 @@
+{
+  "vehicles": [
+    {
+      "vin": "WVWZZZFLEET000001",
+      "dtcs": [
+        { "code": "P0300", "status": "Confirmed", "description": "Misfire", "severity": "major" },
+        { "code": "U0100", "status": "Pending", "description": "Lost ECM", "severity": "critical" }
+      ]
+    },
+    {
+      "vin": "WVWZZZFLEET000002",
+      "dtcs": [
+        { "code": "P0420", "status": "Confirmed", "description": "Catalyst", "severity": "minor" }
+      ]
+    },
+    {
+      "vin": "WVWZZZFLEET000003",
+      "errors": [
+        {
+          "id": "e1",
+          "category": "safety_mechanism",
+          "severity": "critical",
+          "source": "log",
+          "description": "Watchdog deadline missed",
+          "timestamp": "2026-11-14T10:00:00Z"
+        }
+      ]
+    }
+  ]
+}
