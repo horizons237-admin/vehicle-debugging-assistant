@@ -1,0 +1,31 @@
+# Snippet: Azure Pipelines publishes a VDA-compatible JSON report
+trigger:
+  - main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  - script: |
+      mkdir -p out
+      python3 - <<'PY'
+      import json, os, datetime
+      report = {
+        "meta": {
+          "pipeline": os.environ.get("BUILD_DEFINITIONNAME", "azure"),
+          "build": os.environ.get("BUILD_BUILDNUMBER", "0"),
+          "commit": os.environ.get("BUILD_SOURCEVERSION", "unknown")[:12],
+          "generatedAt": datetime.datetime.utcnow().isoformat() + "Z",
+          "tool": "azure-pipelines"
+        },
+        "errors": [],
+        "dtcs": []
+      }
+      open("out/vda-cicd-report.json","w",encoding="utf-8").write(json.dumps(report, indent=2))
+      PY
+    displayName: Emit VDA CI/CD report
+
+  - task: PublishPipelineArtifact@1
+    inputs:
+      targetPath: out/vda-cicd-report.json
+      artifact: vda-cicd-report

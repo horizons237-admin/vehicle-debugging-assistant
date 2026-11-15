@@ -1,0 +1,33 @@
+# Snippet: produce Vehicle Debugging Assistant report from GitLab CI
+stages:
+  - analyze
+  - publish
+
+vda_report:
+  stage: publish
+  image: python:3.11-slim
+  script:
+    - mkdir -p out
+    - |
+      python - <<'PY'
+      import json, os, datetime
+      report = {
+        "meta": {
+          "pipeline": os.environ.get("CI_PIPELINE_ID", "local"),
+          "build": os.environ.get("CI_JOB_ID", "0"),
+          "commit": os.environ.get("CI_COMMIT_SHA", "unknown")[:12],
+          "generatedAt": datetime.datetime.utcnow().isoformat() + "Z",
+          "tool": "gitlab-ci"
+        },
+        "errors": [],
+        "dtcs": []
+      }
+      path = "out/vda-cicd-report.json"
+      with open(path, "w", encoding="utf-8") as f:
+          json.dump(report, f, indent=2)
+      print("Wrote", path)
+      PY
+  artifacts:
+    paths:
+      - out/vda-cicd-report.json
+    expire_in: 30 days

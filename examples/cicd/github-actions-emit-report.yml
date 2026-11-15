@@ -1,0 +1,39 @@
+# Example: automotive job that emits a VDA-compatible report artifact
+name: ECU analysis → VDA report
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run analyzers (placeholder)
+        run: |
+          echo "Run MISRA / unit / HIL exporters here"
+          mkdir -p out
+
+      - name: Emit VDA CI/CD report
+        run: |
+          mkdir -p out
+          cat > out/vda-cicd-report.json << JSON
+          {
+            "meta": {
+              "pipeline": "ecu-analysis",
+              "build": "${{ github.run_number }}",
+              "commit": "${{ github.sha }}",
+              "tool": "example-pipeline"
+            },
+            "errors": [],
+            "dtcs": []
+          }
+          JSON
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vda-cicd-report
+          path: out/vda-cicd-report.json
