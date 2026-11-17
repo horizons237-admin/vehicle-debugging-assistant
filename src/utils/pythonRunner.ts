@@ -24,14 +24,15 @@ const MAX_STDOUT_CHARS = 8_000_000;
 
 /**
  * Runs a Python script located in the extension's python/ folder.
- * Supports timeout, stdout limit, and CancellationToken (P0/P2).
+ * Optional pythonPathOverride supports 32-bit Python for J2534 DLL probe.
  */
 export async function runPythonScript(
   scriptName: string,
   args: string[] = [],
   inputJson?: object,
   timeoutMs?: number,
-  token?: vscode.CancellationToken
+  token?: vscode.CancellationToken,
+  pythonPathOverride?: string
 ): Promise<PythonResult> {
   const config = getConfig();
   const extensionPath =
@@ -85,7 +86,8 @@ export async function runPythonScript(
 
     let proc: ChildProcessWithoutNullStreams;
     try {
-      proc = spawn(config.pythonPath, [scriptPath, ...args], {
+      const py = (pythonPathOverride && pythonPathOverride.trim()) || config.pythonPath;
+      proc = spawn(py, [scriptPath, ...args], {
         env: { ...process.env, PYTHONUNBUFFERED: '1' }
       });
     } catch (err) {
