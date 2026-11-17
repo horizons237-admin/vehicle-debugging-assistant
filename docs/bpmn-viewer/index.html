@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VDA – BPMN Viewer (bpmn-visualization)</title>
+  <script src="https://cdn.jsdelivr.net/npm/bpmn-visualization@0.47.0/dist/bpmn-visualization.min.js"></script>
+  <style>
+    :root { --bg:#0f1419; --panel:#1a2332; --fg:#e7ecf3; --muted:#8b9bb4; --accent:#3d8bfd; --border:#2a3548; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background:var(--bg); color:var(--fg); }
+    header { display:flex; flex-wrap:wrap; gap:12px; align-items:center; padding:12px 16px; background:var(--panel); border-bottom:1px solid var(--border); }
+    header h1 { font-size:16px; margin:0; font-weight:600; }
+    header .muted { color:var(--muted); font-size:12px; }
+    select, button { background:#243044; color:var(--fg); border:1px solid var(--border); border-radius:6px; padding:8px 12px; font-size:13px; }
+    button { cursor:pointer; background:var(--accent); border-color:transparent; font-weight:600; }
+    button:hover { filter:brightness(1.08); }
+    #status { font-size:12px; color:var(--muted); margin-left:auto; }
+    #bpmn-container { width:100%; height:calc(100vh - 58px); background:#fff; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Vehicle Debugging Assistant — BPMN</h1>
+    <span class="muted">powered by <a href="https://github.com/process-analytics/bpmn-visualization-js" style="color:var(--accent)">bpmn-visualization</a></span>
+    <label class="muted" for="diagram">Diagram</label>
+    <select id="diagram">
+      <option value="../bpmn/01_diagnostic_analysis_l2.bpmn">01 – Diagnostic analysis</option>
+      <option value="../bpmn/02_buslog_pipeline_l2.bpmn">02 – Bus-log pipeline</option>
+      <option value="../bpmn/03_self_diagnostic_l2.bpmn">03 – Self diagnostic</option>
+      <option value="../bpmn/04_cicd_import_l2.bpmn">04 – CI/CD import</option>
+    </select>
+    <button type="button" id="reload">Load</button>
+    <span id="status">Ready</span>
+  </header>
+  <div id="bpmn-container"></div>
+  <script>
+    const statusEl = document.getElementById('status');
+    const selectEl = document.getElementById('diagram');
+    let bpmnVisualization = null;
+    function setStatus(msg, isErr) {
+      statusEl.textContent = msg;
+      statusEl.style.color = isErr ? '#ff8a8a' : 'var(--muted)';
+    }
+    function ensureViewer() {
+      if (bpmnVisualization) return bpmnVisualization;
+      const BpmnVisualization = (window.bpmnvisu && window.bpmnvisu.BpmnVisualization) || window.BpmnVisualization;
+      if (!BpmnVisualization) throw new Error('bpmn-visualization failed to load from CDN');
+      bpmnVisualization = new BpmnVisualization({ container: 'bpmn-container', navigation: { enabled: true } });
+      return bpmnVisualization;
+    }
+    async function loadDiagram(url) {
+      setStatus('Loading ' + url + '…');
+      try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('HTTP ' + res.status + ' for ' + url);
+        const xml = await res.text();
+        ensureViewer().load(xml);
+        setStatus('Loaded: ' + url + ' (zoom/pan enabled)');
+      } catch (e) {
+        setStatus(String(e.message || e), true);
+        console.error(e);
+      }
+    }
+    document.getElementById('reload').addEventListener('click', () => loadDiagram(selectEl.value));
+    selectEl.addEventListener('change', () => loadDiagram(selectEl.value));
+    loadDiagram(selectEl.value);
+  </script>
+</body>
+</html>
