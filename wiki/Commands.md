@@ -1,31 +1,20 @@
 # Commands
 
 ## Core
-Connect ECU, Read/Clear DTCs, Analyze Log, Read DID, Reports, AI analyze, Tickets, Confluence, CI/CD import, ARXML, DoIP discovery, VIN / Health.
+Connect ECU, Read/Clear DTCs, Analyze Log, Read DID, Reports, AI, Tickets, Confluence, CI/CD import, ARXML, DoIP, VIN, Health, Triage, Status signals, Dashboard, Audit log.
 
 ## P2
-| Command | Id |
-|---------|-----|
-| Anomaly Assist (local baseline) | `vehicleDebug.anomalyAssist` |
-| Data Governance Panel | `vehicleDebug.openGovernance` |
-| Governance: Self-Test Scopes | `vehicleDebug.testGovernance` |
-| Export Partner Data Pack | `vehicleDebug.exportPartnerPack` |
-| Import Offline Fleet & Rank | `vehicleDebug.importFleetOffline` |
+Anomaly Assist · Data Governance · Partner Pack · Offline Fleet Rank
 
-## P3 (wired on main)
-| Command | Id |
-|---------|-----|
-| OTA Correlation (read-only) | `vehicleDebug.otaCorrelation` |
-| Open OTA Campaigns File | `vehicleDebug.openOtaCampaigns` |
-| UN R155 Checklist (aide) | `vehicleDebug.cyberChecklist` |
-| Export Lab Incident Pack | `vehicleDebug.exportIncidentPack` |
-| Read EV Status (lab) | `vehicleDebug.readEvStatus` |
+## P3
+OTA Correlation · Open OTA Campaigns · UN R155 Checklist (aide) · Lab Incident Pack · EV Status
 
-**P3 safety:** no eCall, no remote vehicle control, no OTA install trigger — analysis/dev aides only.
+## Process & self-check
+Show BPMN Viewer · Run / Export Self Diagnostic · SOVD Discover · Pull Remote Diagnostics (mock) · Timeline
 
-Campaigns file (auto-created): `.vehicle-debug/ota-campaigns.json`.
+## Bus log / CAN
+Analyze CAN Flow · Probe / Decode Bus Log · Parse/Analyze ASC · Load DBC · Annotate Log with DBC
 
-Settings: `vehicleDebug.governance.*`. Remote LLM upload remains opt-in.
+**Safety:** analysis-only — no vehicle control, no eCall, no OTA install.
 
-## Process diagrams
-Show BPMN Viewer — see [BPMN](BPMN).
+See [BPMN](BPMN) for process diagrams.
