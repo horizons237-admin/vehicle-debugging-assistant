@@ -22,9 +22,7 @@ Extension VS Code pour l'**analyse d'erreurs** dans le développement automobile
 
 ## Prérequis
 
-- VS Code ≥ 1.85
-- Node.js 18+ (compile)
-- Python 3.8+
+- VS Code ≥ 1.85 · Node.js 18+ · Python 3.8+
 
 ### Dépendances Python optionnelles
 
@@ -34,11 +32,11 @@ Extension VS Code pour l'**analyse d'erreurs** dans le développement automobile
 | `udsoncan` + `can-isotp` | Stack UDS ISO-TP |
 | `asammdf` | MF4 complet |
 
-Sans ces libs / sans interface CAN → **mode simulation** automatique.
+Sans ces libs → **mode simulation** automatique.
 
 ```bash
-pip install python-can udsoncan can-isotp   # bus réel
-pip install asammdf                          # MF4 enrichi
+pip install python-can udsoncan can-isotp
+pip install asammdf
 ```
 
 ## Installation (développement)
@@ -46,17 +44,14 @@ pip install asammdf                          # MF4 enrichi
 ```bash
 git clone https://github.com/horizons237-admin/vehicle-debugging-assistant.git
 cd vehicle-debugging-assistant
-npm install
-npm run compile
+npm install && npm run compile
 ```
 
-VS Code : ouvrir le dossier → **F5** (Extension Development Host).
-
-VSIX : `npm run package` puis *Install from VSIX…*
+VS Code : **F5**. VSIX : `npm run package`.
 
 ## Catalogue des commandes (77)
 
-Toutes préfixées `Vehicle Debug: …` dans la palette (`Ctrl+Shift+P`).
+Palette : `Ctrl+Shift+P` → **Vehicle Debug:**
 
 ### Session ECU / UDS
 
@@ -67,6 +62,13 @@ Toutes préfixées `Vehicle Debug: …` dans la palette (`Ctrl+Shift+P`).
 | `vehicleDebug.readDtcs` | Read DTCs |
 | `vehicleDebug.clearDtcs` | Clear DTCs |
 | `vehicleDebug.readDid` | Read Data Identifier (DID) |
+| `vehicleDebug.readDtcExtended` | UDS 0x19 Read DTC Extended |
+| `vehicleDebug.udsTesterPresent` | UDS: Tester Present |
+| `vehicleDebug.udsReadMemory` | UDS: Read Memory (simulation read-only) |
+| `vehicleDebug.selectActiveEcu` | Select Active ECU |
+| `vehicleDebug.addEcuTarget` | Add ECU Target |
+| `vehicleDebug.removeEcuTarget` | Remove ECU Target |
+| `vehicleDebug.showActiveEcu` | Show Active ECU |
 
 ### OBD-II
 
@@ -74,10 +76,11 @@ Toutes préfixées `Vehicle Debug: …` dans la palette (`Ctrl+Shift+P`).
 |----------|-------|
 | `vehicleDebug.obdConnect` | OBD-II: Connect (lab) |
 | `vehicleDebug.obdReadPids` | OBD-II: Read PIDs |
-| `vehicleDebug.obdReadDtcs` | OBD-II: Read DTCs |
-| `vehicleDebug.obdClearDtcs` | OBD-II: Clear DTCs |
-| `vehicleDebug.obdReadiness` | OBD-II: Readiness |
-| `vehicleDebug.obdMode09` | OBD-II: Mode 09 Info |
+| `vehicleDebug.obdReadDtcs` | OBD-II: Read DTCs (Mode 03) |
+| `vehicleDebug.obdClearDtcs` | OBD-II: Clear DTCs (Mode 04) |
+| `vehicleDebug.obdReadVin` | OBD-II: Read VIN (Mode 09) |
+| `vehicleDebug.readObdReadiness` | OBD-II Readiness Monitors |
+| `vehicleDebug.readObdMode09` | OBD-II Mode 09 Vehicle Info |
 
 ### Bus logs / CAN
 
@@ -87,9 +90,10 @@ Toutes préfixées `Vehicle Debug: …` dans la palette (`Ctrl+Shift+P`).
 | `vehicleDebug.openSampleLog` | Open Sample Trace Log |
 | `vehicleDebug.parseAsc` | Parse ASC Log |
 | `vehicleDebug.analyzeAsc` | Analyze ASC Log |
-| `vehicleDebug.decodeBlfMf4` | Decode BLF/MF4 |
+| `vehicleDebug.probeBuslog` | Probe BLF/MF4 Header |
+| `vehicleDebug.decodeBuslog` | Decode BLF/MF4 |
+| `vehicleDebug.analyzeBuslogBinary` | Analyze BLF/MF4 Bus Log |
 | `vehicleDebug.analyzeCanFlow` | Analyze CAN Bus Flow |
-| `vehicleDebug.analyzeBuslog` | Analyze Bus Log (unified) |
 
 ### Health / Status / VIN
 
@@ -99,6 +103,7 @@ Toutes préfixées `Vehicle Debug: …` dans la palette (`Ctrl+Shift+P`).
 | `vehicleDebug.readVinFromDid` | Read VIN (DID F190) |
 | `vehicleDebug.refreshHealth` | Refresh Vehicle Health |
 | `vehicleDebug.exportHealthSnapshot` | Export Health Snapshot |
+| `vehicleDebug.diffHealthSnapshots` | Diff Health Snapshots |
 | `vehicleDebug.openTriageRules` | Open / Create Triage Rules |
 | `vehicleDebug.readVehicleStatus` | Read Vehicle Status |
 
@@ -116,9 +121,15 @@ Toutes préfixées `Vehicle Debug: …` dans la palette (`Ctrl+Shift+P`).
 |----------|-------|
 | `vehicleDebug.analyzeArxml` | Analyze ARXML (DEM/DCM/DTC) |
 | `vehicleDebug.doipDiscover` | DoIP: Vehicle Discovery |
+| `vehicleDebug.doipDiagnosticSession` | DoIP: Diagnostic Session (lab) |
+| `vehicleDebug.doipReadDtcs` | DoIP: Read DTCs (lab E2E) |
 | `vehicleDebug.loadDbc` | Load DBC Symbols |
 | `vehicleDebug.annotateLogWithDbc` | Annotate Log with DBC |
-| `vehicleDebug.parseOdx` | Parse ODX (lab) |
+| `vehicleDebug.loadOdx` | Load ODX Description (lab) |
+| `vehicleDebug.applyOdxDtcs` | Apply ODX DTCs to View |
+| `vehicleDebug.lookupJ2012` | Lookup DTC (J2012 lab catalog) |
+| `vehicleDebug.dpduStatus` | D-PDU API Status (stub) |
+| `vehicleDebug.j2534Status` | J2534 Pass-Thru Status (stub) |
 
 ### AI / ALM / Export
 
@@ -141,7 +152,7 @@ Toutes préfixées `Vehicle Debug: …` dans la palette (`Ctrl+Shift+P`).
 |----------|-------|
 | `vehicleDebug.importCicdReport` | Import CI/CD Analysis Report |
 | `vehicleDebug.startCiWatch` | Start CI Report Folder Watch |
-| `vehicleDebug.stopCiWatch` | Stop CI Report Folder Watch |
+| `vehicleDebug.stopCiWatch` | Stop CI Report Watch |
 
 ### Governance / Fleet / Partner
 
@@ -152,6 +163,7 @@ Toutes préfixées `Vehicle Debug: …` dans la palette (`Ctrl+Shift+P`).
 | `vehicleDebug.testGovernance` | Governance: Self-Test Scopes |
 | `vehicleDebug.exportPartnerPack` | Export Partner Data Pack |
 | `vehicleDebug.importFleetOffline` | Import Offline Fleet & Rank |
+| `vehicleDebug.openAuditLog` | Open Audit Log |
 
 ### OTA / Cyber / EV / Incident
 
@@ -170,15 +182,10 @@ Toutes préfixées `Vehicle Debug: …` dans la palette (`Ctrl+Shift+P`).
 | `vehicleDebug.showReport` | Show Analysis Report |
 | `vehicleDebug.refreshViews` | Refresh Views |
 | `vehicleDebug.runSelfDiagnostic` | Run Self Diagnostic |
-| `vehicleDebug.showSelfDiagnostic` | Show Self Diagnostic Panel |
-
-### Other (standards lab / extras)
-
-Commandes additionnelles enregistrées dans `package.json` (J2012, Mode09 helpers, D-PDU stub, multi-ECU) — voir palette **Vehicle Debug**.
+| `vehicleDebug.exportSelfDiagnostic` | Export Self Diagnostic Report |
+| `vehicleDebug.showDashboard` | Show Dashboard |
 
 ## Configuration
-
-`Ctrl+,` → **Vehicle Debug**
 
 | Setting | Défaut | Description |
 |---------|--------|-------------|
@@ -186,16 +193,7 @@ Commandes additionnelles enregistrées dans `package.json` (J2012, Mode09 helper
 | `vehicleDebug.canInterface` | `socketcan` | socketcan / vector / pcan / virtual |
 | `vehicleDebug.canChannel` | `can0` | Canal CAN |
 | `vehicleDebug.txId` / `rxId` | `0x7E0` / `0x7E8` | IDs diagnostiques |
-| `vehicleDebug.defaultSession` | `extended` | Session UDS |
 | `vehicleDebug.enableSafetyClassification` | `true` | Scoring ASIL indicatif |
-
-## Workflow typique
-
-1. **Connect to ECU** (simulation si pas de hardware)
-2. **Read DTCs** → codes + freeze frames
-3. **Open Sample Trace Log** / **Parse ASC** / **Decode BLF/MF4** → **Analyze CAN Bus Flow**
-4. **Show Analysis Report** · tickets ALM · export Confluence (opt-in)
-5. **Self Diagnostic** pour l'état des backends
 
 ## Architecture
 
@@ -220,4 +218,4 @@ Python backends (src/python/)
 
 ## Licence
 
-MIT — voir [LICENSE](LICENSE).
+MIT — [LICENSE](LICENSE).
