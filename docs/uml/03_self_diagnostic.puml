@@ -1,0 +1,28 @@
+@startuml VDA_Self_Diagnostic
+title VDA – Self Diagnostic (UML Activity)
+start
+:Extension aktiviert\n/ manueller Run;
+
+fork
+  :Runtime prüfen\n(VS Code, Python);
+fork again
+  :Backend-Skripte\nvorhanden?;
+fork again
+  :Live Probes\n(UDS/OBD/DoIP/DBC sim);
+fork again
+  :Config & Integrationen\n(Jira, LLM, Transport);
+end fork
+
+:Self-Diag TreeView + StatusBar;
+
+if (Overall Status?) then (ok)
+  :Ende ok;
+  stop
+elseif (warn) then
+  :Nutzer informieren;
+  stop
+else (error)
+  :Blocker anzeigen;
+  stop
+endif
+@enduml

@@ -1,0 +1,40 @@
+@startuml VDA_Diagnostic_Analysis
+title VDA – Diagnostische Analyse (UML Activity)
+|Ingenieur|
+start
+:ECU verbinden\n(Sim / CAN / DoIP);
+
+|Extension VDA|
+if (Transport?) then (simulation)
+  :Simulation Mode;
+elseif (UDS/DoIP) then
+  :UDS Session\n(0x10 / TesterPresent);
+else (OBD-II)
+  :OBD-II Lab\n(PIDs / Mode 03/09);
+endif
+
+:DTCs lesen\n(0x19 extended / OBD);
+:Anreichern\n(J2012 / ODX / Triage);
+:Vehicle Health + Timeline;
+
+if (LLM Analyse?) then (ja)
+  :LLM Assist\n(local/remote opt-in);
+else (nein)
+endif
+
+|ALM|
+if (Ticket erstellen?) then (ja)
+  :Jira / CodeBeamer Ticket;
+else (nein)
+endif
+
+|Extension VDA|
+:Export Report\n(JSON / Confluence);
+stop
+
+note right
+  **Safety:** Analyse-Unterstützung only
+  – keine Fahrzeugsteuerung
+  – keine ASIL-Bestätigung
+end note
+@enduml

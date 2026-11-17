@@ -1,0 +1,17 @@
+flowchart TD
+  Start([Log-Datei verfügbar]) --> Select[Datei wählen<br/>blf / mf4 / asc / log]
+  Select --> GFmt{Format?}
+  GFmt -->|BLF| Blf[BLF Decoder]
+  GFmt -->|MF4| Mf4[MF4 Decoder]
+  GFmt -->|ASC| Asc[ASC Parser]
+  GFmt -->|Text| Txt[Text/Candump]
+  Blf --> Frames[Frames normalisieren]
+  Mf4 --> Frames
+  Asc --> Frames
+  Txt --> Frames
+  Frames --> Flow[CAN Flow Analyzer]
+  Flow --> GDbc{DBC?}
+  GDbc -->|ja| Dbc[DBC Annotation]
+  GDbc -->|nein| Report
+  Dbc --> Report[JSON Report + Audit]
+  Report --> End([Report bereit])

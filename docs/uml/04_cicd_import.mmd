@@ -1,0 +1,12 @@
+flowchart TD
+  Start([CI Report erzeugt]) --> GIn{Eingang?}
+  GIn -->|manuell| Man[importCicdReport]
+  GIn -->|Watch| Watch[startCiWatch]
+  Man --> Val[JSON Schema validieren]
+  Watch --> Val
+  Val --> GVal{Valid?}
+  GVal -->|ok| Map[TreeViews mappen]
+  Map --> Triage[Triage Rules]
+  Triage --> Ok([Findings sichtbar])
+  GVal -->|invalid| Rej[Audit + Notification]
+  Rej --> Fail([Import abgebrochen])

@@ -1,0 +1,26 @@
+@startuml VDA_BusLog_Pipeline
+title VDA – Bus-Log Pipeline (UML Activity)
+start
+:Log-Datei wählen\n(.blf / .mf4 / .asc / .log);
+
+if (Format?) then (BLF)
+  :BLF Decoder\n(vda-blf-lite);
+elseif (MF4) then
+  :MF4 Decoder\n(asammdf / python-can);
+elseif (ASC) then
+  :ASC Parser;
+else (Text)
+  :Text/Candump Trace;
+endif
+
+:Frames normalisieren;
+:CAN Flow Analyzer\n(IDs, UDS, Paare);
+
+if (DBC vorhanden?) then (ja)
+  :DBC Symbol Annotation;
+else (nein)
+endif
+
+:JSON Report + Audit Log;
+stop
+@enduml

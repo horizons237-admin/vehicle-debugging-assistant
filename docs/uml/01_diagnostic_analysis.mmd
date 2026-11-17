@@ -1,0 +1,19 @@
+flowchart TD
+  Start([Ingenieur startet Analyse]) --> Connect[ECU verbinden<br/>Sim / CAN / DoIP]
+  Connect --> GMode{Transport?}
+  GMode -->|simulation| Sim[Simulation Mode]
+  GMode -->|UDS/DoIP| Uds[UDS Session<br/>0x10 / TesterPresent]
+  GMode -->|OBD-II| Obd[OBD-II Lab<br/>PIDs / Mode 03/09]
+  Sim --> ReadDtc[DTCs lesen<br/>0x19 / OBD]
+  Uds --> ReadDtc
+  Obd --> ReadDtc
+  ReadDtc --> Enrich[Anreichern<br/>J2012 / ODX / Triage]
+  Enrich --> Health[Vehicle Health + Timeline]
+  Health --> GLlm{LLM Analyse?}
+  GLlm -->|ja| Llm[LLM Assist<br/>opt-in]
+  GLlm -->|nein| GTicket
+  Llm --> GTicket{Ticket erstellen?}
+  GTicket -->|ja| Alm[Jira / CodeBeamer]
+  GTicket -->|nein| Export
+  Alm --> Export[Export Report<br/>JSON / Confluence]
+  Export --> End([Analyse abgeschlossen])

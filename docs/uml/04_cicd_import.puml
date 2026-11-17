@@ -1,0 +1,24 @@
+@startuml VDA_CICD_Import
+title VDA – CI/CD Report Import (UML Activity)
+start
+:CI Report erzeugt;
+
+if (Eingang?) then (manuell)
+  :Manueller Import\n(importCicdReport);
+else (Watch)
+  :Folder Watch\n(startCiWatch);
+endif
+
+:JSON Schema validieren\n(VDA schema);
+
+if (Valid?) then (ok)
+  :Errors/DTCs in TreeViews mappen;
+  :Triage Rules anwenden;
+  :Findings sichtbar;
+  stop
+else (invalid)
+  :Fehler melden\n(Audit + Notification);
+  :Import abgebrochen;
+  stop
+endif
+@enduml

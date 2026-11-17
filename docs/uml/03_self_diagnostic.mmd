@@ -1,0 +1,15 @@
+flowchart TD
+  Start([Extension aktiv / Run]) --> Fork{{Parallele Probes}}
+  Fork --> R[Runtime VS Code / Python]
+  Fork --> B[Backend-Skripte]
+  Fork --> P[Live Probes UDS/OBD/DoIP]
+  Fork --> C[Config / Integrationen]
+  R --> Join{{Aggregieren}}
+  B --> Join
+  P --> Join
+  C --> Join
+  Join --> Tree[TreeView + StatusBar]
+  Tree --> G{Overall?}
+  G -->|ok| Ok([ok])
+  G -->|warn| Warn([warn – informieren])
+  G -->|error| Err([error – Blocker])
