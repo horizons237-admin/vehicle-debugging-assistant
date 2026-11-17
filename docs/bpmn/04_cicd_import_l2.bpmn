@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+  id="Definitions_Process_CiImport"
+  targetNamespace="https://github.com/horizons237-admin/vehicle-debugging-assistant">
+  <bpmn:process id="Process_CiImport" name="VDA – CI/CD Report Import (Level 2)" isExecutable="false">
+    <bpmn:startEvent id="Start_Ci" name="CI Report erzeugt">
+      <bpmn:outgoing>c1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:exclusiveGateway id="G_In" name="Eingang">
+      <bpmn:incoming>c1</bpmn:incoming>
+      <bpmn:outgoing>c2a</bpmn:outgoing>
+      <bpmn:outgoing>c2b</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="T_Manual" name="Manueller Import&#10;(importCicdReport)">
+      <bpmn:incoming>c2a</bpmn:incoming>
+      <bpmn:outgoing>c3</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="T_Watch" name="Folder Watch&#10;(startCiWatch)">
+      <bpmn:incoming>c2b</bpmn:incoming>
+      <bpmn:outgoing>c3b</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="T_Validate" name="JSON Schema validieren&#10;(VDA schema)">
+      <bpmn:incoming>c3</bpmn:incoming>
+      <bpmn:incoming>c3b</bpmn:incoming>
+      <bpmn:outgoing>c4</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="G_Val" name="Valid?">
+      <bpmn:incoming>c4</bpmn:incoming>
+      <bpmn:outgoing>c5a</bpmn:outgoing>
+      <bpmn:outgoing>c5b</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="T_Map" name="Errors/DTCs in TreeViews mappen">
+      <bpmn:incoming>c5a</bpmn:incoming>
+      <bpmn:outgoing>c6</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="T_Reject" name="Fehler melden&#10;(Audit + Notification)">
+      <bpmn:incoming>c5b</bpmn:incoming>
+      <bpmn:outgoing>c7</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="T_Triage" name="Triage Rules anwenden">
+      <bpmn:incoming>c6</bpmn:incoming>
+      <bpmn:outgoing>c8</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="End_CiOk" name="Findings sichtbar">
+      <bpmn:incoming>c8</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="End_CiFail" name="Import abgebrochen">
+      <bpmn:incoming>c7</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="c1" sourceRef="Start_Ci" targetRef="G_In"/>
+    <bpmn:sequenceFlow id="c2a" name="manuell" sourceRef="G_In" targetRef="T_Manual"/>
+    <bpmn:sequenceFlow id="c2b" name="Watch" sourceRef="G_In" targetRef="T_Watch"/>
+    <bpmn:sequenceFlow id="c3" sourceRef="T_Manual" targetRef="T_Validate"/>
+    <bpmn:sequenceFlow id="c3b" sourceRef="T_Watch" targetRef="T_Validate"/>
+    <bpmn:sequenceFlow id="c4" sourceRef="T_Validate" targetRef="G_Val"/>
+    <bpmn:sequenceFlow id="c5a" name="ok" sourceRef="G_Val" targetRef="T_Map"/>
+    <bpmn:sequenceFlow id="c5b" name="invalid" sourceRef="G_Val" targetRef="T_Reject"/>
+    <bpmn:sequenceFlow id="c6" sourceRef="T_Map" targetRef="T_Triage"/>
+    <bpmn:sequenceFlow id="c7" sourceRef="T_Reject" targetRef="End_CiFail"/>
+    <bpmn:sequenceFlow id="c8" sourceRef="T_Triage" targetRef="End_CiOk"/>
+  </bpmn:process>
+</bpmn:definitions>

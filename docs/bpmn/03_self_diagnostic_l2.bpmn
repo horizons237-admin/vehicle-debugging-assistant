@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+  id="Definitions_Process_SelfDiag"
+  targetNamespace="https://github.com/horizons237-admin/vehicle-debugging-assistant">
+  <bpmn:process id="Process_SelfDiag" name="VDA – Self Diagnostic (Level 2)" isExecutable="false">
+    <bpmn:startEvent id="Start_Sd" name="Extension aktiviert / manueller Run">
+      <bpmn:outgoing>s1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:parallelGateway id="G_Fork" name="Probes parallel">
+      <bpmn:incoming>s1</bpmn:incoming>
+      <bpmn:outgoing>s2a</bpmn:outgoing>
+      <bpmn:outgoing>s2b</bpmn:outgoing>
+      <bpmn:outgoing>s2c</bpmn:outgoing>
+      <bpmn:outgoing>s2d</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:task id="T_Runtime" name="Runtime prüfen&#10;(VS Code, Python)">
+      <bpmn:incoming>s2a</bpmn:incoming>
+      <bpmn:outgoing>s3a</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="T_Backends" name="Backend-Skripte vorhanden?">
+      <bpmn:incoming>s2b</bpmn:incoming>
+      <bpmn:outgoing>s3b</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="T_Probes" name="Live Probes&#10;(UDS/OBD/DoIP/DBC sim)">
+      <bpmn:incoming>s2c</bpmn:incoming>
+      <bpmn:outgoing>s3c</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="T_Cfg" name="Config &amp; Integrationen&#10;(Jira, LLM, Transport)">
+      <bpmn:incoming>s2d</bpmn:incoming>
+      <bpmn:outgoing>s3d</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:parallelGateway id="G_Join" name="Aggregieren">
+      <bpmn:incoming>s3a</bpmn:incoming>
+      <bpmn:incoming>s3b</bpmn:incoming>
+      <bpmn:incoming>s3c</bpmn:incoming>
+      <bpmn:incoming>s3d</bpmn:incoming>
+      <bpmn:outgoing>s4</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:task id="T_Tree" name="Self-Diag TreeView + StatusBar">
+      <bpmn:incoming>s4</bpmn:incoming>
+      <bpmn:outgoing>s5</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="G_Sev" name="Overall Status">
+      <bpmn:incoming>s5</bpmn:incoming>
+      <bpmn:outgoing>s6a</bpmn:outgoing>
+      <bpmn:outgoing>s6b</bpmn:outgoing>
+      <bpmn:outgoing>s6c</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="End_Ok" name="ok">
+      <bpmn:incoming>s6a</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="End_Warn" name="warn – Nutzer informieren">
+      <bpmn:incoming>s6b</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="End_Err" name="error – Blocker anzeigen">
+      <bpmn:incoming>s6c</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="s1" sourceRef="Start_Sd" targetRef="G_Fork"/>
+    <bpmn:sequenceFlow id="s2a" sourceRef="G_Fork" targetRef="T_Runtime"/>
+    <bpmn:sequenceFlow id="s2b" sourceRef="G_Fork" targetRef="T_Backends"/>
+    <bpmn:sequenceFlow id="s2c" sourceRef="G_Fork" targetRef="T_Probes"/>
+    <bpmn:sequenceFlow id="s2d" sourceRef="G_Fork" targetRef="T_Cfg"/>
+    <bpmn:sequenceFlow id="s3a" sourceRef="T_Runtime" targetRef="G_Join"/>
+    <bpmn:sequenceFlow id="s3b" sourceRef="T_Backends" targetRef="G_Join"/>
+    <bpmn:sequenceFlow id="s3c" sourceRef="T_Probes" targetRef="G_Join"/>
+    <bpmn:sequenceFlow id="s3d" sourceRef="T_Cfg" targetRef="G_Join"/>
+    <bpmn:sequenceFlow id="s4" sourceRef="G_Join" targetRef="T_Tree"/>
+    <bpmn:sequenceFlow id="s5" sourceRef="T_Tree" targetRef="G_Sev"/>
+    <bpmn:sequenceFlow id="s6a" name="ok" sourceRef="G_Sev" targetRef="End_Ok"/>
+    <bpmn:sequenceFlow id="s6b" name="warn" sourceRef="G_Sev" targetRef="End_Warn"/>
+    <bpmn:sequenceFlow id="s6c" name="error" sourceRef="G_Sev" targetRef="End_Err"/>
+  </bpmn:process>
+</bpmn:definitions>
