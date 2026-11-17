@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>VDA – BPMN Viewer (bpmn-visualization)</title>
+  <!-- bpmn-visualization-js (Process Analytics) — https://github.com/process-analytics/bpmn-visualization-js -->
   <script src="https://cdn.jsdelivr.net/npm/bpmn-visualization@0.47.0/dist/bpmn-visualization.min.js"></script>
   <style>
     :root { --bg:#0f1419; --panel:#1a2332; --fg:#e7ecf3; --muted:#8b9bb4; --accent:#3d8bfd; --border:#2a3548; }
@@ -17,6 +18,7 @@
     button:hover { filter:brightness(1.08); }
     #status { font-size:12px; color:var(--muted); margin-left:auto; }
     #bpmn-container { width:100%; height:calc(100vh - 58px); background:#fff; }
+    .err { color:#ff8a8a; white-space:pre-wrap; padding:16px; }
   </style>
 </head>
 <body>
@@ -25,10 +27,10 @@
     <span class="muted">powered by <a href="https://github.com/process-analytics/bpmn-visualization-js" style="color:var(--accent)">bpmn-visualization</a></span>
     <label class="muted" for="diagram">Diagram</label>
     <select id="diagram">
-      <option value="../bpmn/01_diagnostic_analysis_l2.bpmn">01 – Diagnostic analysis</option>
-      <option value="../bpmn/02_buslog_pipeline_l2.bpmn">02 – Bus-log pipeline</option>
-      <option value="../bpmn/03_self_diagnostic_l2.bpmn">03 – Self diagnostic</option>
-      <option value="../bpmn/04_cicd_import_l2.bpmn">04 – CI/CD import</option>
+      <option value="01_diagnostic_analysis_l2.bpmn">01 – Diagnostic analysis</option>
+      <option value="02_buslog_pipeline_l2.bpmn">02 – Bus-log pipeline</option>
+      <option value="03_self_diagnostic_l2.bpmn">03 – Self diagnostic</option>
+      <option value="04_cicd_import_l2.bpmn">04 – CI/CD import</option>
     </select>
     <button type="button" id="reload">Load</button>
     <span id="status">Ready</span>
@@ -38,30 +40,54 @@
     const statusEl = document.getElementById('status');
     const selectEl = document.getElementById('diagram');
     let bpmnVisualization = null;
+
+    // Relative path works on local server / GitHub Pages; jsDelivr works from any origin (wiki links, raw.githack, etc.)
+    const REPO_CDN = 'https://cdn.jsdelivr.net/gh/horizons237-admin/vehicle-debugging-assistant@main/docs/bpmn/';
+
     function setStatus(msg, isErr) {
       statusEl.textContent = msg;
       statusEl.style.color = isErr ? '#ff8a8a' : 'var(--muted)';
     }
+
     function ensureViewer() {
       if (bpmnVisualization) return bpmnVisualization;
       const BpmnVisualization = (window.bpmnvisu && window.bpmnvisu.BpmnVisualization) || window.BpmnVisualization;
-      if (!BpmnVisualization) throw new Error('bpmn-visualization failed to load from CDN');
-      bpmnVisualization = new BpmnVisualization({ container: 'bpmn-container', navigation: { enabled: true } });
+      if (!BpmnVisualization) {
+        throw new Error('bpmn-visualization failed to load from CDN');
+      }
+      bpmnVisualization = new BpmnVisualization({
+        container: 'bpmn-container',
+        navigation: { enabled: true }
+      });
       return bpmnVisualization;
     }
-    async function loadDiagram(url) {
-      setStatus('Loading ' + url + '…');
+
+    async function fetchXml(fileName) {
+      // Prefer same-origin relative path (Pages / local http.server)
+      const relative = '../bpmn/' + fileName;
       try {
-        const res = await fetch(url);
-        if (!res.ok) throw new Error('HTTP ' + res.status + ' for ' + url);
-        const xml = await res.text();
-        ensureViewer().load(xml);
-        setStatus('Loaded: ' + url + ' (zoom/pan enabled)');
+        const res = await fetch(relative);
+        if (res.ok) return await res.text();
+      } catch (_) { /* fall through */ }
+      // Fallback: jsDelivr (CORS-friendly) — works when opened from wiki / raw hosts
+      const res2 = await fetch(REPO_CDN + fileName);
+      if (!res2.ok) throw new Error('HTTP ' + res2.status + ' for ' + fileName);
+      return await res2.text();
+    }
+
+    async function loadDiagram(fileName) {
+      setStatus('Loading ' + fileName + '…');
+      try {
+        const xml = await fetchXml(fileName);
+        const viewer = ensureViewer();
+        viewer.load(xml);
+        setStatus('Loaded: ' + fileName + ' (zoom / pan enabled)');
       } catch (e) {
         setStatus(String(e.message || e), true);
         console.error(e);
       }
     }
+
     document.getElementById('reload').addEventListener('click', () => loadDiagram(selectEl.value));
     selectEl.addEventListener('change', () => loadDiagram(selectEl.value));
     loadDiagram(selectEl.value);
