@@ -8,6 +8,9 @@
 - [Connexions](Connections)
 - [Configuration](Configuration)
 - [CI/CD](CICD)
+- [Process diagrams](Process-Diagrams)
+  - [BPMN](BPMN)
+  - [UML Activity](UML-Activity)
 - [Safety](Safety)
 - [SDLC](SDLC)
 - [Dépannage](Troubleshooting)
@@ -16,4 +19,5 @@
 
 ---
 [Dépôt GitHub](https://github.com/horizons237-admin/vehicle-debugging-assistant)  
+[Présentation PPTX](https://github.com/horizons237-admin/vehicle-debugging-assistant/blob/main/Vehicle_Debugging_Assistant_Presentation.pptx)  
 [docs/](https://github.com/horizons237-admin/vehicle-debugging-assistant/tree/main/docs)
