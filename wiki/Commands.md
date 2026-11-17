@@ -3,7 +3,7 @@
 ## Core
 Connect ECU, Read/Clear DTCs, Analyze Log, Read DID, Reports, AI analyze, Tickets, Confluence, CI/CD import, ARXML, DoIP discovery, VIN / Health.
 
-## P2 (wired on main)
+## P2
 | Command | Id |
 |---------|-----|
 | Anomaly Assist (local baseline) | `vehicleDebug.anomalyAssist` |
@@ -12,15 +12,20 @@ Connect ECU, Read/Clear DTCs, Analyze Log, Read DID, Reports, AI analyze, Ticket
 | Export Partner Data Pack | `vehicleDebug.exportPartnerPack` |
 | Import Offline Fleet & Rank | `vehicleDebug.importFleetOffline` |
 
-Settings: `vehicleDebug.governance.*` (ALM / partner export, redact VIN / location). Remote LLM upload stays **opt-in** (`llm.allowRemoteDataUpload`, default false).
+## P3 (wired on main)
+| Command | Id |
+|---------|-----|
+| OTA Correlation (read-only) | `vehicleDebug.otaCorrelation` |
+| Open OTA Campaigns File | `vehicleDebug.openOtaCampaigns` |
+| UN R155 Checklist (aide) | `vehicleDebug.cyberChecklist` |
+| Export Lab Incident Pack | `vehicleDebug.exportIncidentPack` |
+| Read EV Status (lab) | `vehicleDebug.readEvStatus` |
 
-Sample fleet: `resources/sample_fleet.json`.
+**P3 safety:** no eCall, no remote vehicle control, no OTA install trigger — analysis/dev aides only.
 
-## P1 / P0 helpers
-Multi-ECU, DoIP E2E, health diff, audit/redaction, OBD-II lab, unit tests.
+Campaigns file (auto-created): `.vehicle-debug/ota-campaigns.json`.
 
-## P3 (lab aides — modules present)
-OTA Correlation, UN R155 checklist, Lab Incident Pack, EV status.
+Settings: `vehicleDebug.governance.*`. Remote LLM upload remains opt-in.
 
 ## Process diagrams
 Show BPMN Viewer — see [BPMN](BPMN).
