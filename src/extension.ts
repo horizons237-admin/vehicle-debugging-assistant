@@ -3,6 +3,7 @@ import { DtcTreeProvider, DtcTreeItem } from './providers/dtcTreeProvider';
 import { ErrorTreeProvider, ErrorTreeItem } from './providers/errorTreeProvider';
 import { SessionStatusProvider } from './providers/sessionStatusProvider';
 import { ConnectionsTreeProvider } from './providers/connectionsTreeProvider';
+import { StatusTreeProvider } from './providers/statusTreeProvider';
 import { ConnectionManager } from './connections/connectionManager';
 import { ConnectionKind } from './connections/types';
 import { connectEcu, disconnectEcu } from './commands/connectEcu';
@@ -25,11 +26,16 @@ import { runAnomalyAssist } from './commands/anomalyAssistCmd';
 import { openGovernancePanel, testGovernanceScopes } from './commands/governanceCmd';
 import { exportPartnerPack } from './commands/partnerExportCmd';
 import { importFleetOffline } from './commands/fleetOfflineCmd';
+import { runOtaCorrelation, openOtaCampaignsFile } from './commands/otaCorrelationCmd';
+import { runCyberChecklist } from './commands/cyberChecklistCmd';
+import { exportIncidentPack } from './commands/incidentPackCmd';
+import { readEvChargingStatus } from './commands/evStatusCmd';
 
 let dtcProvider: DtcTreeProvider;
 let errorProvider: ErrorTreeProvider;
 let sessionProvider: SessionStatusProvider;
 let connectionsProvider: ConnectionsTreeProvider;
+let statusProvider: StatusTreeProvider;
 let connectionManager: ConnectionManager;
 let statusBar: vscode.StatusBarItem;
 
@@ -43,6 +49,7 @@ export function activate(context: vscode.ExtensionContext) {
   errorProvider = new ErrorTreeProvider();
   sessionProvider = new SessionStatusProvider();
   connectionsProvider = new ConnectionsTreeProvider(connectionManager);
+  statusProvider = new StatusTreeProvider();
 
   context.subscriptions.push(
     vscode.window.registerTreeDataProvider('vehicleDebug.dtcView', dtcProvider),
@@ -69,6 +76,7 @@ export function activate(context: vscode.ExtensionContext) {
       updateStatusBar(false);
       dtcProvider.clear();
       errorProvider.clear();
+      statusProvider.clear();
       setLastAction('Disconnected ECU');
     }),
     vscode.commands.registerCommand('vehicleDebug.readDtcs', async () => {
@@ -91,6 +99,7 @@ export function activate(context: vscode.ExtensionContext) {
       errorProvider.refresh();
       sessionProvider.refresh();
       connectionsProvider.refresh();
+      statusProvider.refresh();
     }),
     vscode.commands.registerCommand('vehicleDebug.openSampleLog', async () => {
       const sample = vscode.Uri.joinPath(context.extensionUri, 'resources', 'sample_trace.log');
@@ -163,6 +172,21 @@ export function activate(context: vscode.ExtensionContext) {
     }),
     vscode.commands.registerCommand('vehicleDebug.importFleetOffline', async () => {
       await importFleetOffline();
+    }),
+    vscode.commands.registerCommand('vehicleDebug.otaCorrelation', async () => {
+      await runOtaCorrelation(dtcProvider, errorProvider, statusProvider);
+    }),
+    vscode.commands.registerCommand('vehicleDebug.openOtaCampaigns', async () => {
+      await openOtaCampaignsFile();
+    }),
+    vscode.commands.registerCommand('vehicleDebug.cyberChecklist', async () => {
+      await runCyberChecklist();
+    }),
+    vscode.commands.registerCommand('vehicleDebug.exportIncidentPack', async () => {
+      await exportIncidentPack(dtcProvider, errorProvider, statusProvider);
+    }),
+    vscode.commands.registerCommand('vehicleDebug.readEvStatus', async () => {
+      await readEvChargingStatus(statusProvider);
     })
   );
 
