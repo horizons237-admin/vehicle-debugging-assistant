@@ -1,11 +1,14 @@
 # Changelog
 
 ## [0.2.9] — 2026-11-17
-### Wired on main
-- **P0–P1 core:** ECU connect, DTCs, logs, ARXML, DoIP, AI, tickets, CI/CD import
-- **P2:** anomaly assist, governance, partner packs, offline fleet
+### Wired on main — full command surface (78)
+- **Core:** ECU, DTCs, logs, ARXML, DoIP discovery, AI, tickets, CI/CD import
+- **P2:** anomaly, governance, partner packs, offline fleet
 - **P3:** OTA correlation, UN R155 aide, lab incident pack, EV status
-- **Continue:** BPMN viewer, self-diagnostic TreeView, SOVD discovery, remote mock diagnostics, timeline, dashboard, CAN flow, BLF/MF4/ASC decode, DBC annotate, VIN/health/triage, status signals
+- **Process / self-check:** BPMN viewer, self-diagnostic, SOVD, remote mock, timeline, dashboard
+- **Bus log:** CAN flow, BLF/MF4/ASC, DBC annotate
+- **Health / VIN:** identity, triage, snapshots, status signals
+- **Continue:** multi-ECU targets, OBD-II lab, DoIP session/DTCs, J2534/D-PDU status, CI folder watch, ODX load/apply, UDS read-memory / tester-present, J2012 / Mode 09 / readiness
 
 ### Safety
 - Analysis support only — no vehicle control, no eCall, no OTA push
