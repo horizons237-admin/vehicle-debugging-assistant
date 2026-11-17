@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+  id="Definitions_Process_DiagnosticAnalysis"
+  targetNamespace="https://github.com/horizons237-admin/vehicle-debugging-assistant">
+  <bpmn:process id="Process_DiagnosticAnalysis" name="VDA – Diagnostische Analyse (Level 2)" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_1">
+      <bpmn:lane id="Lane_0" name="Ingenieur" />
+      <bpmn:lane id="Lane_1" name="Extension VDA" />
+      <bpmn:lane id="Lane_2" name="ALM" />
+    </bpmn:laneSet>
+    <bpmn:startEvent id="Start_Diag" name="Ingenieur startet Analyse">
+      <bpmn:outgoing>f1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="T_Connect" name="ECU verbinden&#10;(Sim / CAN / DoIP)">
+      <bpmn:incoming>f1</bpmn:incoming>
+      <bpmn:outgoing>f2</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="G_Mode" name="Transport?">
+      <bpmn:incoming>f2</bpmn:incoming>
+      <bpmn:outgoing>f3a</bpmn:outgoing>
+      <bpmn:outgoing>f3b</bpmn:outgoing>
+      <bpmn:outgoing>f3c</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="T_Sim" name="Simulation Mode">
+      <bpmn:incoming>f3a</bpmn:incoming>
+      <bpmn:outgoing>f4</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="T_Uds" name="UDS Session&#10;(0x10 / TesterPresent)">
+      <bpmn:incoming>f3b</bpmn:incoming>
+      <bpmn:outgoing>f4b</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="T_Obd" name="OBD-II Lab&#10;(PIDs / Mode 03/09)">
+      <bpmn:incoming>f3c</bpmn:incoming>
+      <bpmn:outgoing>f4c</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="T_ReadDtc" name="DTCs lesen&#10;(0x19 extended / OBD)">
+      <bpmn:incoming>f4</bpmn:incoming>
+      <bpmn:incoming>f4b</bpmn:incoming>
+      <bpmn:incoming>f4c</bpmn:incoming>
+      <bpmn:outgoing>f5</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="T_Enrich" name="Anreichern&#10;(J2012 / ODX / Triage)">
+      <bpmn:incoming>f5</bpmn:incoming>
+      <bpmn:outgoing>f6</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="T_Health" name="Vehicle Health&#10;+ Timeline">
+      <bpmn:incoming>f6</bpmn:incoming>
+      <bpmn:outgoing>f7</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="G_Llm" name="LLM Analyse?">
+      <bpmn:incoming>f7</bpmn:incoming>
+      <bpmn:outgoing>f8a</bpmn:outgoing>
+      <bpmn:outgoing>f8b</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="T_Llm" name="LLM Assist&#10;(local/remote opt-in)">
+      <bpmn:incoming>f8a</bpmn:incoming>
+      <bpmn:outgoing>f9</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="G_Ticket" name="Ticket erstellen?">
+      <bpmn:incoming>f9</bpmn:incoming>
+      <bpmn:incoming>f8b</bpmn:incoming>
+      <bpmn:outgoing>f10a</bpmn:outgoing>
+      <bpmn:outgoing>f10b</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="T_Alm" name="Jira / CodeBeamer Ticket">
+      <bpmn:incoming>f10a</bpmn:incoming>
+      <bpmn:outgoing>f11</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="T_Export" name="Export Report&#10;(JSON / Confluence)">
+      <bpmn:incoming>f11</bpmn:incoming>
+      <bpmn:incoming>f10b</bpmn:incoming>
+      <bpmn:outgoing>f12</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="End_Diag" name="Analyse abgeschlossen">
+      <bpmn:incoming>f12</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="f1" sourceRef="Start_Diag" targetRef="T_Connect"/>
+    <bpmn:sequenceFlow id="f2" sourceRef="T_Connect" targetRef="G_Mode"/>
+    <bpmn:sequenceFlow id="f3a" name="simulation" sourceRef="G_Mode" targetRef="T_Sim"/>
+    <bpmn:sequenceFlow id="f3b" name="UDS/DoIP" sourceRef="G_Mode" targetRef="T_Uds"/>
+    <bpmn:sequenceFlow id="f3c" name="OBD-II" sourceRef="G_Mode" targetRef="T_Obd"/>
+    <bpmn:sequenceFlow id="f4" sourceRef="T_Sim" targetRef="T_ReadDtc"/>
+    <bpmn:sequenceFlow id="f4b" sourceRef="T_Uds" targetRef="T_ReadDtc"/>
+    <bpmn:sequenceFlow id="f4c" sourceRef="T_Obd" targetRef="T_ReadDtc"/>
+    <bpmn:sequenceFlow id="f5" sourceRef="T_ReadDtc" targetRef="T_Enrich"/>
+    <bpmn:sequenceFlow id="f6" sourceRef="T_Enrich" targetRef="T_Health"/>
+    <bpmn:sequenceFlow id="f7" sourceRef="T_Health" targetRef="G_Llm"/>
+    <bpmn:sequenceFlow id="f8a" name="ja" sourceRef="G_Llm" targetRef="T_Llm"/>
+    <bpmn:sequenceFlow id="f8b" name="nein" sourceRef="G_Llm" targetRef="G_Ticket"/>
+    <bpmn:sequenceFlow id="f9" sourceRef="T_Llm" targetRef="G_Ticket"/>
+    <bpmn:sequenceFlow id="f10a" name="ja" sourceRef="G_Ticket" targetRef="T_Alm"/>
+    <bpmn:sequenceFlow id="f10b" name="nein" sourceRef="G_Ticket" targetRef="T_Export"/>
+    <bpmn:sequenceFlow id="f11" sourceRef="T_Alm" targetRef="T_Export"/>
+    <bpmn:sequenceFlow id="f12" sourceRef="T_Export" targetRef="End_Diag"/>
+  </bpmn:process>
+</bpmn:definitions>

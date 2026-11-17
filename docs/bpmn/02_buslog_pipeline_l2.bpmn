@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+  id="Definitions_Process_BusLog"
+  targetNamespace="https://github.com/horizons237-admin/vehicle-debugging-assistant">
+  <bpmn:process id="Process_BusLog" name="VDA – Bus-Log Pipeline (Level 2)" isExecutable="false">
+    <bpmn:startEvent id="Start_Log" name="Log-Datei verfügbar">
+      <bpmn:outgoing>b1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="T_Select" name="Datei wählen&#10;(.blf / .mf4 / .asc / .log)">
+      <bpmn:incoming>b1</bpmn:incoming>
+      <bpmn:outgoing>b2</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="G_Fmt" name="Format?">
+      <bpmn:incoming>b2</bpmn:incoming>
+      <bpmn:outgoing>b3a</bpmn:outgoing>
+      <bpmn:outgoing>b3b</bpmn:outgoing>
+      <bpmn:outgoing>b3c</bpmn:outgoing>
+      <bpmn:outgoing>b3d</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="T_Blf" name="BLF Decoder&#10;(vda-blf-lite)">
+      <bpmn:incoming>b3a</bpmn:incoming>
+      <bpmn:outgoing>b4</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="T_Mf4" name="MF4 Decoder&#10;(asammdf / python-can)">
+      <bpmn:incoming>b3b</bpmn:incoming>
+      <bpmn:outgoing>b4b</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="T_Asc" name="ASC Parser">
+      <bpmn:incoming>b3c</bpmn:incoming>
+      <bpmn:outgoing>b4c</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="T_Txt" name="Text/Candump Trace">
+      <bpmn:incoming>b3d</bpmn:incoming>
+      <bpmn:outgoing>b4d</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="T_Frames" name="Frames normalisieren">
+      <bpmn:incoming>b4</bpmn:incoming>
+      <bpmn:incoming>b4b</bpmn:incoming>
+      <bpmn:incoming>b4c</bpmn:incoming>
+      <bpmn:incoming>b4d</bpmn:incoming>
+      <bpmn:outgoing>b5</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="T_Flow" name="CAN Flow Analyzer&#10;(IDs, UDS, Paare)">
+      <bpmn:incoming>b5</bpmn:incoming>
+      <bpmn:outgoing>b6</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="G_Dbc" name="DBC vorhanden?">
+      <bpmn:incoming>b6</bpmn:incoming>
+      <bpmn:outgoing>b7a</bpmn:outgoing>
+      <bpmn:outgoing>b7b</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="T_Dbc" name="DBC Symbol Annotation">
+      <bpmn:incoming>b7a</bpmn:incoming>
+      <bpmn:outgoing>b8</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="T_Report" name="JSON Report + Audit Log">
+      <bpmn:incoming>b8</bpmn:incoming>
+      <bpmn:incoming>b7b</bpmn:incoming>
+      <bpmn:outgoing>b9</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="End_Log" name="Analyse Report bereit">
+      <bpmn:incoming>b9</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="b1" sourceRef="Start_Log" targetRef="T_Select"/>
+    <bpmn:sequenceFlow id="b2" sourceRef="T_Select" targetRef="G_Fmt"/>
+    <bpmn:sequenceFlow id="b3a" name="BLF" sourceRef="G_Fmt" targetRef="T_Blf"/>
+    <bpmn:sequenceFlow id="b3b" name="MF4" sourceRef="G_Fmt" targetRef="T_Mf4"/>
+    <bpmn:sequenceFlow id="b3c" name="ASC" sourceRef="G_Fmt" targetRef="T_Asc"/>
+    <bpmn:sequenceFlow id="b3d" name="Text" sourceRef="G_Fmt" targetRef="T_Txt"/>
+    <bpmn:sequenceFlow id="b4" sourceRef="T_Blf" targetRef="T_Frames"/>
+    <bpmn:sequenceFlow id="b4b" sourceRef="T_Mf4" targetRef="T_Frames"/>
+    <bpmn:sequenceFlow id="b4c" sourceRef="T_Asc" targetRef="T_Frames"/>
+    <bpmn:sequenceFlow id="b4d" sourceRef="T_Txt" targetRef="T_Frames"/>
+    <bpmn:sequenceFlow id="b5" sourceRef="T_Frames" targetRef="T_Flow"/>
+    <bpmn:sequenceFlow id="b6" sourceRef="T_Flow" targetRef="G_Dbc"/>
+    <bpmn:sequenceFlow id="b7a" name="ja" sourceRef="G_Dbc" targetRef="T_Dbc"/>
+    <bpmn:sequenceFlow id="b7b" name="nein" sourceRef="G_Dbc" targetRef="T_Report"/>
+    <bpmn:sequenceFlow id="b8" sourceRef="T_Dbc" targetRef="T_Report"/>
+    <bpmn:sequenceFlow id="b9" sourceRef="T_Report" targetRef="End_Log"/>
+  </bpmn:process>
+</bpmn:definitions>
