@@ -1,18 +1,26 @@
-# Commandes
+# Commands
 
-Palette : **Ctrl+Shift+P** → `Vehicle Debug:`.
+## Core
+Connect ECU, Read/Clear DTCs, Analyze Log, Read DID, Reports, AI analyze, Tickets, Confluence, CI/CD import, ARXML, DoIP discovery, VIN / Health.
 
-## Diagnostic
-Connect / Disconnect ECU, Read/Clear DTCs, Read DID, Read Vehicle Status, Read EV Status, Analyze Log, Analyze ARXML, DoIP Discovery.
+## P2 (wired on main)
+| Command | Id |
+|---------|-----|
+| Anomaly Assist (local baseline) | `vehicleDebug.anomalyAssist` |
+| Data Governance Panel | `vehicleDebug.openGovernance` |
+| Governance: Self-Test Scopes | `vehicleDebug.testGovernance` |
+| Export Partner Data Pack | `vehicleDebug.exportPartnerPack` |
+| Import Offline Fleet & Rank | `vehicleDebug.importFleetOffline` |
 
-## Health & identité
-Set VIN, Read VIN F190, Refresh Health, Export Health Snapshot, Triage Rules, Session Timeline.
+Settings: `vehicleDebug.governance.*` (ALM / partner export, redact VIN / location). Remote LLM upload stays **opt-in** (`llm.allowRemoteDataUpload`, default false).
 
-## P2
-Anomaly Assist, Governance Panel / Self-Test, Partner Pack, Offline Fleet Rank.
+Sample fleet: `resources/sample_fleet.json`.
 
-## P3
-OTA Correlation, Open OTA Campaigns, UN R155 Checklist, Lab Incident Pack.
+## P1 / P0 helpers
+Multi-ECU, DoIP E2E, health diff, audit/redaction, OBD-II lab, unit tests.
 
-## ALM / AI / CI
-AI Analyze, Create Ticket, Export Confluence, Import CI/CD Report, Configure Connections, Remote Diagnostics, SOVD Discover.
+## P3 (lab aides — modules present)
+OTA Correlation, UN R155 checklist, Lab Incident Pack, EV status.
+
+## Process diagrams
+Show BPMN Viewer — see [BPMN](BPMN).
