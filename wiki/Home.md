@@ -5,7 +5,7 @@
 
 | | |
 |---|---|
-| **Version** | 0.1.1 |
+| **Version** | 0.2.9 |
 | **Licence** | MIT |
 | **Dépôt** | [horizons237-admin/vehicle-debugging-assistant](https://github.com/horizons237-admin/vehicle-debugging-assistant) |
 | **Présentation** | [Vehicle_Debugging_Assistant_Presentation.pptx](https://github.com/horizons237-admin/vehicle-debugging-assistant/blob/main/Vehicle_Debugging_Assistant_Presentation.pptx) |
@@ -36,7 +36,7 @@ Centraliser dans VS Code le **diagnostic**, l’**analyse** et la **traçabilit�
 | [Développement](Development) | Structure du code |
 | [Feuille de route](Roadmap) | P0–P3, jalons 0.2 / 0.3 |
 
-## Périmètre fonctionnel (0.1.1)
+## Périmètre fonctionnel (0.2.9)
 
 - DTC + freeze frames, logs CAN, ARXML DEM/DCM, DoIP lab  
 - **Vehicle Health** + règles de triage, VIN  
@@ -44,6 +44,7 @@ Centraliser dans VS Code le **diagnostic**, l’**analyse** et la **traçabilit�
 - Anomaly baseline, gouvernance data, partner packs, fleet offline  
 - Corrélation OTA, checklist UN R155 (aide), incident pack lab, EV status  
 - Import rapports **CI/CD** JSON (schema VDA)  
+- Bus logs **BLF / MF4 / ASC** + CAN flow analysis  
 - Tickets Jira / CodeBeamer, export Confluence, LLM local/remote (opt-in)
 
 ## Avertissement safety
