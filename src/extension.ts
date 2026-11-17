@@ -52,7 +52,7 @@ import { diffHealthSnapshotFiles } from './commands/healthDiffCmd';
 import { selectActiveEcu, addEcuTarget, removeEcuTarget, showActiveEcuInfo } from './commands/multiEcuCmd';
 import { obdConnect, obdReadPids, obdReadDtcs, obdClearDtcs, obdReadVin } from './commands/obdCmd';
 import { doipDiagnosticSession, doipReadDtcs } from './commands/doipDiagnosticCmd';
-import { showJ2534Status, showDpduStatus } from './commands/j2534Cmd';
+import { showJ2534Status, showDpduStatus, discoverJ2534Drivers, probeJ2534Library } from './commands/j2534Cmd';
 import { startCiReportWatch, stopCiReportWatch } from './commands/ciWatchCmd';
 import {
   loadOdxDescription, applyOdxDtcsToView, readDtcExtended, readObdReadiness, readObdMode09, lookupJ2012
@@ -184,6 +184,8 @@ export function activate(context: vscode.ExtensionContext) {
     reg('vehicleDebug.doipDiagnosticSession', async () => { await doipDiagnosticSession(); }),
     reg('vehicleDebug.doipReadDtcs', async () => { await doipReadDtcs(dtcProvider); healthProvider.refresh(); }),
     reg('vehicleDebug.j2534Status', async () => { await showJ2534Status(); }),
+    reg('vehicleDebug.j2534Discover', async () => { await discoverJ2534Drivers(); }),
+    reg('vehicleDebug.j2534Probe', async () => { await probeJ2534Library(); }),
     reg('vehicleDebug.dpduStatus', async () => { await showDpduStatus(); }),
     reg('vehicleDebug.startCiWatch', async () => { await startCiReportWatch(errorProvider, dtcProvider); }),
     reg('vehicleDebug.stopCiWatch', () => { stopCiReportWatch(); }),
