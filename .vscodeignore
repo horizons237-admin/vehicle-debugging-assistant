@@ -11,6 +11,8 @@ tests/**
 .github/**
 wiki/**
 docs/**
+!docs/bpmn/**
+!docs/bpmn-viewer/**
 pytest.ini
 .eslintrc.cjs
 .eslintignore
