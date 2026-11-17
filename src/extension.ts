@@ -49,6 +49,15 @@ import { exportHealthSnapshot } from './commands/exportHealth';
 import { readVehicleStatus } from './commands/readVehicleStatus';
 import { openAuditLog } from './utils/auditLog';
 import { diffHealthSnapshotFiles } from './commands/healthDiffCmd';
+import { selectActiveEcu, addEcuTarget, removeEcuTarget, showActiveEcuInfo } from './commands/multiEcuCmd';
+import { obdConnect, obdReadPids, obdReadDtcs, obdClearDtcs, obdReadVin } from './commands/obdCmd';
+import { doipDiagnosticSession, doipReadDtcs } from './commands/doipDiagnosticCmd';
+import { showJ2534Status, showDpduStatus } from './commands/j2534Cmd';
+import { startCiReportWatch, stopCiReportWatch } from './commands/ciWatchCmd';
+import {
+  loadOdxDescription, applyOdxDtcsToView, readDtcExtended, readObdReadiness, readObdMode09, lookupJ2012
+} from './commands/standardsCmd';
+import { udsReadMemory, udsTesterPresent } from './commands/udsExtendedCmd';
 
 let dtcProvider: DtcTreeProvider;
 let errorProvider: ErrorTreeProvider;
@@ -82,8 +91,7 @@ export function activate(context: vscode.ExtensionContext) {
     onDidChangeSession(() => { sessionProvider.refresh(); healthProvider.refresh(); updateStatusBar(false); })
   );
 
-  const reg = (id: string, fn: (...a: any[]) => any) =>
-    vscode.commands.registerCommand(id, fn);
+  const reg = (id: string, fn: (...a: any[]) => any) => vscode.commands.registerCommand(id, fn);
 
   context.subscriptions.push(
     reg('vehicleDebug.connectEcu', async () => {
@@ -163,7 +171,30 @@ export function activate(context: vscode.ExtensionContext) {
     reg('vehicleDebug.parseAsc', async () => { await parseAscLog(); }),
     reg('vehicleDebug.analyzeAsc', async () => { await analyzeAscLog(); }),
     reg('vehicleDebug.loadDbc', async () => { await loadDbcSymbols(); }),
-    reg('vehicleDebug.annotateLogWithDbc', async () => { await annotateLogWithDbc(); })
+    reg('vehicleDebug.annotateLogWithDbc', async () => { await annotateLogWithDbc(); }),
+    reg('vehicleDebug.selectActiveEcu', async () => { await selectActiveEcu(); sessionProvider.refresh(); }),
+    reg('vehicleDebug.addEcuTarget', async () => { await addEcuTarget(); }),
+    reg('vehicleDebug.removeEcuTarget', async () => { await removeEcuTarget(); }),
+    reg('vehicleDebug.showActiveEcu', () => { showActiveEcuInfo(); }),
+    reg('vehicleDebug.obdConnect', async () => { await obdConnect(); sessionProvider.refresh(); }),
+    reg('vehicleDebug.obdReadDtcs', async () => { await obdReadDtcs(dtcProvider); healthProvider.refresh(); }),
+    reg('vehicleDebug.obdReadPids', async () => { await obdReadPids(statusProvider); healthProvider.refresh(); }),
+    reg('vehicleDebug.obdReadVin', async () => { await obdReadVin(); sessionProvider.refresh(); }),
+    reg('vehicleDebug.obdClearDtcs', async () => { await obdClearDtcs(); }),
+    reg('vehicleDebug.doipDiagnosticSession', async () => { await doipDiagnosticSession(); }),
+    reg('vehicleDebug.doipReadDtcs', async () => { await doipReadDtcs(dtcProvider); healthProvider.refresh(); }),
+    reg('vehicleDebug.j2534Status', async () => { await showJ2534Status(); }),
+    reg('vehicleDebug.dpduStatus', async () => { await showDpduStatus(); }),
+    reg('vehicleDebug.startCiWatch', async () => { await startCiReportWatch(errorProvider, dtcProvider); }),
+    reg('vehicleDebug.stopCiWatch', () => { stopCiReportWatch(); }),
+    reg('vehicleDebug.loadOdx', async () => { await loadOdxDescription(); }),
+    reg('vehicleDebug.applyOdxDtcs', async () => { await applyOdxDtcsToView(dtcProvider); healthProvider.refresh(); }),
+    reg('vehicleDebug.readDtcExtended', async () => { await readDtcExtended(dtcProvider); healthProvider.refresh(); }),
+    reg('vehicleDebug.readObdReadiness', async () => { await readObdReadiness(); }),
+    reg('vehicleDebug.readObdMode09', async () => { await readObdMode09(); }),
+    reg('vehicleDebug.lookupJ2012', async () => { await lookupJ2012(); }),
+    reg('vehicleDebug.udsReadMemory', async () => { await udsReadMemory(); }),
+    reg('vehicleDebug.udsTesterPresent', async () => { await udsTesterPresent(); })
   );
 
   statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
@@ -175,6 +206,7 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(vscode.workspace.onDidChangeConfiguration((e) => {
     if (e.affectsConfiguration('vehicleDebug')) connectionsProvider.refresh();
   }));
+  context.subscriptions.push({ dispose: () => stopCiReportWatch() });
   void selfDiagProvider.runAndRefresh(false).then(() => selfDiagProvider.refresh());
   vscode.window.showInformationMessage(`Vehicle Debugging Assistant ready (Python: ${getConfig().pythonPath})`);
 }
@@ -192,4 +224,6 @@ function updateStatusBar(connected: boolean) {
   }
 }
 
-export function deactivate() {}
+export function deactivate() {
+  stopCiReportWatch();
+}
