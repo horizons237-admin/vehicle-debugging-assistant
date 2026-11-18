@@ -180,4 +180,4 @@ Préfixe palette : **Vehicle Debugging:** — détail dans [Commands](Commands).
 
 Le runbook Phase 3 s’arrête quand le **pack/report** est prêt à être défendu devant le FO (traces + requirements), pas quand « on a une intuition ».
 
-→ [Plan d’architecte — Phase 4 Envol](Plan-Architecte)
+→ [Runbook Phase 4 — Envol](Runbook-Phase4) · [Plan d’architecte](Plan-Architecte)
