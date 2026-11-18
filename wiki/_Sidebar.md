@@ -18,6 +18,7 @@
   - [UML Activity](UML-Activity)
 - [Safety](Safety)
 - [SDLC](SDLC)
+- [Traçabilité](Traceability)
 - [Dépannage](Troubleshooting)
 - [Développement](Development)
 - [Feuille de route](Roadmap)
