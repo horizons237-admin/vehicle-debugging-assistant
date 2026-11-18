@@ -8,7 +8,7 @@ export interface PythonResult {
   success: boolean;
   stdout: string;
   stderr: string;
-  data?: unknown;
+  data?: any;
   timedOut?: boolean;
   cancelled?: boolean;
 }
@@ -170,7 +170,7 @@ export async function runPythonScript(
     });
 
     proc.on('close', (code, signal) => {
-      let data: unknown = undefined;
+      let data: any = undefined;
       if (stdout.trim()) {
         try {
           const lines = stdout.trim().split('\n');
