@@ -8,6 +8,7 @@
 - [Architecture](Architecture)
 - [Plan d’architecte](Plan-Architecte)
 - [Runbook Phase 3](Runbook-Phase3)
+- [Runbook Phase 4](Runbook-Phase4)
 - [Connexions](Connections)
 - [Configuration](Configuration)
 - [CI/CD](CICD)

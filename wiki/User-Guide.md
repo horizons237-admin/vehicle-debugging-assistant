@@ -15,6 +15,10 @@
 Séquence lab Trace → preuves MOS : [Runbook Phase 3](Runbook-Phase3)  
 Checklist 1 page + commandes (Health, Triage, Timeline, Anomaly, Export).
 
+### Phase 4 — Envol (runbook)
+Export FO / packs / ALM : [Runbook Phase 4](Runbook-Phase4)  
+Gouvernance → Report/Partner/Incident Pack → Ticket/Confluence → brief FO.
+
 ### Analyse lab
 Connect → Read DTCs / Status → Analyze Log → Health → Export Health Snapshot  
 

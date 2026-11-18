@@ -26,6 +26,7 @@ Centraliser dans VS Code le **diagnostic**, l’**analyse** et la **traçabilit�
 | [Architecture](Architecture) | Couches TS / Python |
 | [Plan d’architecte](Plan-Architecte) | Vue 4 phases (fondations → envol) |
 | [Runbook Phase 3](Runbook-Phase3) | Déchiffrage : checklist + commandes |
+| [Runbook Phase 4](Runbook-Phase4) | Envol : export FO, packs, ALM |
 | [Connexions](Connections) | Jira, Confluence, CodeBeamer, LLM |
 | [Configuration](Configuration) | Settings `vehicleDebug.*` |
 | [CI/CD](CICD) | GitHub, GitLab, K8s, format rapport |
@@ -59,5 +60,6 @@ Les estimations ASIL et analyses IA sont **indicatives**. Ce n’est **pas** un 
 ### Plan d’architecte
 - Vue structurée du produit (4 phases) — [Plan d’architecte](Plan-Architecte).
 
-### Runbook Phase 3
-- [Runbook Phase 3](Runbook-Phase3) — checklist + commandes Déchiffrage.
+### Runbooks
+- [Runbook Phase 3](Runbook-Phase3) — Déchiffrage (checklist + commandes).
+- [Runbook Phase 4](Runbook-Phase4) — Envol (export FO, packs, ALM).
