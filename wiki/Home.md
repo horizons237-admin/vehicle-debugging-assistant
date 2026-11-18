@@ -1,22 +1,40 @@
 # Vehicle Debugging Assistant
 
-Extension VS Code pour l’**analyse** d’erreurs automobile (UDS, OBD-II, AUTOSAR, logs CAN, DoIP) — posture **safety-critical analysis-only**.
+**Extension Visual Studio Code** pour l’analyse d’erreurs dans le développement automobile  
+*(UDS · OBD-II · AUTOSAR · DoIP · ISO 26262 — aide à l’analyse)*
+
+| | |
+|---|---|
+| **Version** | 0.2.9 |
+| **Licence** | MIT |
+| **Dépôt** | [horizons237-admin/vehicle-debugging-assistant](https://github.com/horizons237-admin/vehicle-debugging-assistant) |
+| **Présentation** | [Vehicle_Debugging_Assistant_Presentation.pptx](https://github.com/horizons237-admin/vehicle-debugging-assistant/blob/main/Vehicle_Debugging_Assistant_Presentation.pptx) |
+
+---
+
+## Mission
+
+Centraliser dans VS Code le **diagnostic**, l’**analyse** et la **traçabilité** des erreurs véhicule — sans correction automatique non qualifiée — dans un contexte *safety-critical*.
+
+## Accès rapide
 
 | Page | Contenu |
 |------|---------|
-| [Installation](Installation) | Prérequis, build VSIX |
-| [Guide utilisateur](User-Guide) | Workflows lab |
-| [Commandes](Commands) | Palette (80+) |
-| [J2534 / Pass-Thru](J2534) | Discover + probe analysis-only |
-| [Architecture](Architecture) | Structure du code |
+| [Installation](Installation) | Prérequis, F5, VSIX |
+| [Guide utilisateur](User-Guide) | Workflows lab, Health, Status |
+| [Commandes](Commands) | Catalogue des commandes |
+| [Architecture](Architecture) | Couches TS / Python |
 | [Plan d’architecte](Plan-Architecte) | Vue 4 phases (fondations → envol) |
+| [Runbook Phase 3](Runbook-Phase3) | Déchiffrage : checklist + commandes |
 | [Connexions](Connections) | Jira, Confluence, CodeBeamer, LLM |
-| [Configuration](Configuration) | Settings |
-| [CI/CD](CICD) | Pipelines |
-| [Process diagrams](Process-Diagrams) | BPMN / UML |
-| [Safety](Safety) | Limites produit |
-| [SDLC](SDLC) | Conformité |
-| [Dépannage](Troubleshooting) | FAQ |
+| [Configuration](Configuration) | Settings `vehicleDebug.*` |
+| [CI/CD](CICD) | GitHub, GitLab, K8s, format rapport |
+| [Process diagrams](Process-Diagrams) | BPMN Level-2 & UML Activity |
+| [BPMN](BPMN) | Four core processes (BPMN 2.0) |
+| [UML Activity](UML-Activity) | Same processes (PlantUML / Mermaid) |
+| [Safety](Safety) | Limites ASIL, gouvernance |
+| [SDLC](SDLC) | Planning, exigences, tests, maintenance |
+| [Dépannage](Troubleshooting) | Erreurs fréquentes |
 | [Développement](Development) | Structure du code |
 | [Feuille de route](Roadmap) | P0–P3, jalons 0.2 / 0.3 |
 
@@ -40,3 +58,6 @@ Les estimations ASIL et analyses IA sont **indicatives**. Ce n’est **pas** un 
 
 ### Plan d’architecte
 - Vue structurée du produit (4 phases) — [Plan d’architecte](Plan-Architecte).
+
+### Runbook Phase 3
+- [Runbook Phase 3](Runbook-Phase3) — checklist + commandes Déchiffrage.
