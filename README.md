@@ -1,24 +1,35 @@
 # Vehicle Debugging Assistant
 
-**Version 0.2.9** — lab analysis aid (UDS · OBD-II · bus logs · CI import).
+**Version 0.2.9** — lab analysis aid (UDS · OBD-II · bus logs · J2534 probe · CI import).
 
 Extension VS Code pour l'**analyse d'erreurs** dans le développement automobile (AUTOSAR, UDS, OBD-II, safety-critical / ISO 26262).
 
-> **Safety:** analysis support only — not ASIL confirmation, not vehicle control, not VSOC.
+> **Safety:** analysis support only — not ASIL confirmation, not vehicle control, not VSOC.  
+> **J2534:** registry discovery + Open/ReadVersion/Close only — no WriteMsgs / programming.
 
 ## Fonctionnalités (aperçu)
 
-| Domaine | Capacité |
-|---------|----------|
-| UDS / OBD-II | DTC, DID, session, PIDs, Mode 03/09 (lab) |
-| Bus logs | ASC, BLF lite, MF4 probe/decode, CAN flow |
-| AUTOSAR | ARXML DEM/DCM, DBC, ODX (lab) |
-| Health | VIN, triage, timeline, anomaly baseline |
-| ALM / AI | Jira, CodeBeamer, Confluence, LLM opt-in |
-| CI/CD | Import rapport JSON VDA + folder watch |
-| Process | BPMN Level-2 + UML Activity (wiki) |
+| Domaine | Capacité | Limite |
+|---------|----------|--------|
+| UDS / OBD-II | DTC, DID, session, PIDs, Mode 03/09 (lab) | Sim ou transport lab |
+| Bus logs | ASC, BLF lite, MF4 probe/decode, CAN flow | MF4/BLF selon deps optionnelles |
+| AUTOSAR | ARXML DEM/DCM, DBC, ODX (lab) | — |
+| Health | VIN, triage, timeline, anomaly baseline | Indicatif |
+| J2534 | Discover drivers (registry), probe version | Analysis-only, Windows |
+| Gouvernance | Scopes, VIN redact, partner / incident packs | Pas eCall / VSOC |
+| ALM / CI | Jira, CodeBeamer, Confluence, LLM opt-in, import JSON VDA | SecretStorage |
+| Process | BPMN L2, UML, Plan d’architecte, Runbooks P3/P4 | — |
 
 **Vues latérales** (icône voiture) : DTCs · Errors Analysis · Session & Status · Self-diagnostic
+
+## Démarrage rapide
+
+1. `npm install` && `npm run compile` → **F5** (Extension Development Host)  
+2. Activity Bar → **Vehicle Debug**  
+3. **Connect to ECU** (simulation) → **Read DTCs** → **Vehicle Health**  
+4. Dossier MOS : [Runbook Phase 3](wiki/Runbook-Phase3.md) → [Runbook Phase 4](wiki/Runbook-Phase4.md)  
+
+VSIX : [Releases](https://github.com/horizons237-admin/vehicle-debugging-assistant/releases) (`v0.2.9-linux` / `v0.2.9-windows`).
 
 ## Prérequis
 
@@ -39,6 +50,8 @@ pip install python-can udsoncan can-isotp
 pip install asammdf
 ```
 
+Pour J2534 OEM (Windows), préférer un **Python 32-bit** via `vehicleDebug.j2534.pythonPath32`.
+
 ## Installation (développement)
 
 ```bash
@@ -49,7 +62,7 @@ npm install && npm run compile
 
 VS Code : **F5**. VSIX : `npm run package`.
 
-## Catalogue des commandes (77)
+## Catalogue des commandes (~80)
 
 Palette : `Ctrl+Shift+P` → **Vehicle Debug:**
 
@@ -106,29 +119,36 @@ Palette : `Ctrl+Shift+P` → **Vehicle Debug:**
 | `vehicleDebug.diffHealthSnapshots` | Diff Health Snapshots |
 | `vehicleDebug.openTriageRules` | Open / Create Triage Rules |
 | `vehicleDebug.readVehicleStatus` | Read Vehicle Status |
+| `vehicleDebug.showTimeline` | Show Session Timeline |
 
-### Remote / SOVD / Timeline
+### Remote / SOVD / DoIP
 
 | Commande | Titre |
 |----------|-------|
 | `vehicleDebug.pullRemoteDiagnostics` | Pull Remote Diagnostics (mock/HTTP) |
 | `vehicleDebug.sovdDiscover` | SOVD: Discover Resources |
-| `vehicleDebug.showTimeline` | Show Session Timeline |
+| `vehicleDebug.doipDiscover` | DoIP: Vehicle Discovery |
+| `vehicleDebug.doipDiagnosticSession` | DoIP: Diagnostic Session (lab) |
+| `vehicleDebug.doipReadDtcs` | DoIP: Read DTCs (lab E2E) |
 
-### ARXML / DBC / ODX / DoIP
+### ARXML / DBC / ODX / Standards
 
 | Commande | Titre |
 |----------|-------|
 | `vehicleDebug.analyzeArxml` | Analyze ARXML (DEM/DCM/DTC) |
-| `vehicleDebug.doipDiscover` | DoIP: Vehicle Discovery |
-| `vehicleDebug.doipDiagnosticSession` | DoIP: Diagnostic Session (lab) |
-| `vehicleDebug.doipReadDtcs` | DoIP: Read DTCs (lab E2E) |
 | `vehicleDebug.loadDbc` | Load DBC Symbols |
 | `vehicleDebug.annotateLogWithDbc` | Annotate Log with DBC |
 | `vehicleDebug.loadOdx` | Load ODX Description (lab) |
 | `vehicleDebug.applyOdxDtcs` | Apply ODX DTCs to View |
 | `vehicleDebug.lookupJ2012` | Lookup DTC (J2012 lab catalog) |
 | `vehicleDebug.dpduStatus` | D-PDU API Status (stub) |
+
+### J2534 (analysis-only)
+
+| Commande | Titre |
+|----------|-------|
+| `vehicleDebug.j2534Discover` | J2534: Discover Drivers (registry) |
+| `vehicleDebug.j2534Probe` | J2534: Probe Library (analysis-only) |
 | `vehicleDebug.j2534Status` | J2534 Pass-Thru Status (stub) |
 
 ### AI / ALM / Export
@@ -140,8 +160,6 @@ Palette : `Ctrl+Shift+P` → **Vehicle Debug:**
 | `vehicleDebug.setConnectionSecret` | Set Connection Token / Password |
 | `vehicleDebug.aiAnalyzeSelection` | AI: Analyze Selection / Log |
 | `vehicleDebug.aiAnalyzeAll` | AI: Analyze All Errors & DTCs |
-| `vehicleDebug.aiAnalyzeError` | AI: Analyze This Error |
-| `vehicleDebug.aiAnalyzeDtc` | AI: Analyze This DTC |
 | `vehicleDebug.createTicketFromError` | Create Ticket from Error |
 | `vehicleDebug.createTicketFromDtc` | Create Ticket from DTC |
 | `vehicleDebug.exportConfluence` | Export Report to Confluence |
@@ -154,7 +172,7 @@ Palette : `Ctrl+Shift+P` → **Vehicle Debug:**
 | `vehicleDebug.startCiWatch` | Start CI Report Folder Watch |
 | `vehicleDebug.stopCiWatch` | Stop CI Report Watch |
 
-### Governance / Fleet / Partner
+### Governance / Fleet / Partner / OTA / Cyber / EV
 
 | Commande | Titre |
 |----------|-------|
@@ -163,16 +181,9 @@ Palette : `Ctrl+Shift+P` → **Vehicle Debug:**
 | `vehicleDebug.testGovernance` | Governance: Self-Test Scopes |
 | `vehicleDebug.exportPartnerPack` | Export Partner Data Pack |
 | `vehicleDebug.importFleetOffline` | Import Offline Fleet & Rank |
-| `vehicleDebug.openAuditLog` | Open Audit Log |
-
-### OTA / Cyber / EV / Incident
-
-| Commande | Titre |
-|----------|-------|
-| `vehicleDebug.otaCorrelation` | OTA Campaign Correlation |
-| `vehicleDebug.openOtaCampaigns` | Open OTA Campaigns File |
-| `vehicleDebug.cyberChecklist` | Cyber / UN R155 Checklist (aide) |
 | `vehicleDebug.exportIncidentPack` | Export Lab Incident Pack |
+| `vehicleDebug.otaCorrelation` | OTA Campaign Correlation |
+| `vehicleDebug.cyberChecklist` | Cyber / UN R155 Checklist (aide) |
 | `vehicleDebug.readEvStatus` | Read EV / Charging Status |
 
 ### Self-diagnostic / Views
@@ -184,16 +195,17 @@ Palette : `Ctrl+Shift+P` → **Vehicle Debug:**
 | `vehicleDebug.runSelfDiagnostic` | Run Self Diagnostic |
 | `vehicleDebug.exportSelfDiagnostic` | Export Self Diagnostic Report |
 | `vehicleDebug.showDashboard` | Show Dashboard |
+| `vehicleDebug.showBpmnViewer` | Show BPMN Viewer |
 
-## Configuration
+## Configuration (extrait)
 
 | Setting | Défaut | Description |
 |---------|--------|-------------|
 | `vehicleDebug.pythonPath` | `python3` | Interpréteur Python |
+| `vehicleDebug.j2534.libraryPath` | — | DLL PassThru |
+| `vehicleDebug.j2534.pythonPath32` | — | Python 32-bit pour DLL OEM |
 | `vehicleDebug.canInterface` | `socketcan` | socketcan / vector / pcan / virtual |
-| `vehicleDebug.canChannel` | `can0` | Canal CAN |
-| `vehicleDebug.txId` / `rxId` | `0x7E0` / `0x7E8` | IDs diagnostiques |
-| `vehicleDebug.enableSafetyClassification` | `true` | Scoring ASIL indicatif |
+| `vehicleDebug.enableSafetyClassification` | `true` | Scoring ASIL **indicatif** |
 
 ## Architecture
 
@@ -203,7 +215,7 @@ VS Code Extension (TypeScript)
         │ spawn + JSON
 Python backends (src/python/)
   uds · obd · doip · arxml · dbc · odx
-  asc · blf_* · mf4_* · buslog_* · can_flow
+  asc · blf_* · mf4_* · buslog_* · can_flow · j2534_probe
 ```
 
 ## Documentation
@@ -211,9 +223,11 @@ Python backends (src/python/)
 | Ressource | Lien |
 |-----------|------|
 | Wiki | https://github.com/horizons237-admin/vehicle-debugging-assistant/wiki |
+| Plan d’architecte | [wiki/Plan-Architecte.md](wiki/Plan-Architecte.md) |
+| Runbook Phase 3 / 4 | [Runbook-Phase3](wiki/Runbook-Phase3.md) · [Runbook-Phase4](wiki/Runbook-Phase4.md) |
+| J2534 / Safety | [wiki/J2534.md](wiki/J2534.md) · [wiki/Safety.md](wiki/Safety.md) |
+| Roadmap | [wiki/Roadmap.md](wiki/Roadmap.md) |
 | BPMN / UML | [docs/PROCESS_DIAGRAMS.md](docs/PROCESS_DIAGRAMS.md) |
-| BLF / MDF4 | [docs/BLF.md](docs/BLF.md) · [docs/MDF4.md](docs/MDF4.md) |
-| CI/CD | [docs/CICD.md](docs/CICD.md) |
 | Changelog | [CHANGELOG.md](CHANGELOG.md) |
 
 ## Licence
