@@ -31,7 +31,7 @@ Priorité audit 2026-11-18 :
 ## Planifié 0.3.0
 
 - [ ] Tests unitaires TypeScript + smoke Extension Host automatisé  
-- [ ] Matrice TRACEABILITY REQ → commande → test élargie  
+- [x] Matrice TRACEABILITY REQ → commande → test élargie (docs/TRACEABILITY.md, baseline 0.2.9)  
 - [ ] Runbooks Phase 1 (Fondations) et Phase 2 (Exploration)  
 - [ ] DoIP / transport : documenter clairement sim vs live  
 - [ ] i18n FR / EN cohérent  
@@ -53,5 +53,6 @@ Priorité audit 2026-11-18 :
 - [Plan d’architecte](Plan-Architecte)  
 - [Runbook Phase 3](Runbook-Phase3) · [Runbook Phase 4](Runbook-Phase4)  
 - [Smoke Extension Host](Smoke-Extension-Host)  
+- [Traçabilité](Traceability)  
 - [Safety](Safety) · [J2534](J2534)  
 - Releases : https://github.com/horizons237-admin/vehicle-debugging-assistant/releases  
