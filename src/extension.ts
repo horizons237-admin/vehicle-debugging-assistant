@@ -158,7 +158,7 @@ export function activate(context: vscode.ExtensionContext) {
     reg('vehicleDebug.exportSelfDiagnostic', async () => { await exportSelfDiagnostic(selfDiagProvider); }),
     reg('vehicleDebug.sovdDiscover', async () => { await sovdDiscoverCommand(); }),
     reg('vehicleDebug.pullRemoteDiagnostics', async () => { await pullRemoteDiagnostics(dtcProvider, statusProvider, errorProvider, healthProvider); }),
-    reg('vehicleDebug.showTimeline', async () => { await showSessionTimeline(); }),
+    reg('vehicleDebug.showTimeline', async () => { await showSessionTimeline(dtcProvider, errorProvider, statusProvider); }),
     reg('vehicleDebug.showBpmnViewer', () => showBpmnViewer(context)),
     reg('vehicleDebug.showDashboard', () => {
       showDashboard({ errorCount: errorProvider.getErrors().length, dtcCount: dtcProvider.getDtcs().length, healthTop: healthProvider.getRanked().slice(0, 5).map((r) => r.label) });
