@@ -23,10 +23,10 @@
 
 Priorité audit 2026-11-18 :
 
-- [x] Aligner CHANGELOG / Roadmap / README (cette page)  
-- [ ] Smoke Extension Host (10 commandes critiques)  
-- [ ] Self-diagnostic : états réels (Python, deps BLF/MDF4, J2534 OS)  
-- [ ] Message unique démo : J2534 = Open/ReadVersion/Close only  
+- [x] Aligner CHANGELOG / Roadmap / README  
+- [x] Smoke Extension Host checklist documentée ([Smoke-Extension-Host](Smoke-Extension-Host) / docs/SMOKE_EXTENSION_HOST.md) — exécution manuelle F5 encore à signer  
+- [x] Self-diagnostic enrichi : platform, python32, buslog scripts, check_deps, safety posture (recompile / F5 pour valider)  
+- [x] Message unique démo : J2534 = Open/ReadVersion/Close only (README + Safety self-diag hint)  
 
 ## Planifié 0.3.0
 
@@ -52,5 +52,6 @@ Priorité audit 2026-11-18 :
 
 - [Plan d’architecte](Plan-Architecte)  
 - [Runbook Phase 3](Runbook-Phase3) · [Runbook Phase 4](Runbook-Phase4)  
+- [Smoke Extension Host](Smoke-Extension-Host)  
 - [Safety](Safety) · [J2534](J2534)  
 - Releases : https://github.com/horizons237-admin/vehicle-debugging-assistant/releases  

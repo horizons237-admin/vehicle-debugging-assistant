@@ -9,6 +9,7 @@
 - [Plan d’architecte](Plan-Architecte)
 - [Runbook Phase 3](Runbook-Phase3)
 - [Runbook Phase 4](Runbook-Phase4)
+- [Smoke Extension Host](Smoke-Extension-Host)
 - [Connexions](Connections)
 - [Configuration](Configuration)
 - [CI/CD](CICD)
