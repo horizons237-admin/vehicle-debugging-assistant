@@ -42,9 +42,9 @@ jobs:
 
       - name: Install & package
         run: |
-          npm ci || npm install
+          npm install
           npm run compile
-          npx @vscode/vsce package --no-dependencies -o "vehicle-debugging-assistant-${{ steps.ver.outputs.version }}.vsix"
+          npx @vscode/vsce package --no-dependencies --baseContentUrl https://github.com/horizons237-admin/vehicle-debugging-assistant/raw/main/ --baseImagesUrl https://github.com/horizons237-admin/vehicle-debugging-assistant/raw/main/ -o "vehicle-debugging-assistant-${{ steps.ver.outputs.version }}.vsix"
 
       - name: Platform-named copies
         run: |
@@ -96,6 +96,7 @@ jobs:
             - Same VSIX binary as Windows (VS Code extensions are cross-platform).
             - Platform-specific release documents CAN stack differences only.
             - Wiki: https://github.com/horizons237-admin/vehicle-debugging-assistant/wiki
+            - J2534: https://github.com/horizons237-admin/vehicle-debugging-assistant/wiki/J2534
           files: vehicle-debugging-assistant-${{ needs.package.outputs.version }}-linux.vsix
           draft: false
           prerelease: false
@@ -133,11 +134,13 @@ jobs:
               - `canInterface`: `pcan` / `vector` / `virtual` (with vendor drivers)
               - or `transport=simulation` for analysis without hardware
               - **DoIP** over Ethernet (`transport=doip`) remains usable
+              - **J2534** registry discover + analysis-only probe (see wiki)
 
             ### Notes
             - Same VSIX binary as Linux (VS Code extensions are cross-platform).
             - Platform-specific release documents CAN stack differences only.
             - Wiki: https://github.com/horizons237-admin/vehicle-debugging-assistant/wiki
+            - J2534: https://github.com/horizons237-admin/vehicle-debugging-assistant/wiki/J2534
           files: vehicle-debugging-assistant-${{ needs.package.outputs.version }}-windows.vsix
           draft: false
           prerelease: false
