@@ -203,6 +203,8 @@ Réduire k signaux / codes en *m* facteurs actionnables :
 
 ## PHASE 4 | ENVOL — Rayonnement et Défense du Dossier
 
+> **Runbook opérationnel (export / FO)** : [Runbook Phase 4](Runbook-Phase4)
+
 ### 4.1 Anatomie du « manuscrit » produit
 
 ```
@@ -273,6 +275,7 @@ Méthodologie ←———► Analyse (ciment : triage, packs)
 | Wiki J2534 | https://github.com/horizons237-admin/vehicle-debugging-assistant/wiki/J2534 |
 | Wiki Safety | https://github.com/horizons237-admin/vehicle-debugging-assistant/wiki/Safety |
 | Runbook Phase 3 | https://github.com/horizons237-admin/vehicle-debugging-assistant/blob/main/wiki/Runbook-Phase3.md |
+| Runbook Phase 4 | https://github.com/horizons237-admin/vehicle-debugging-assistant/blob/main/wiki/Runbook-Phase4.md |
 
 ---
 
