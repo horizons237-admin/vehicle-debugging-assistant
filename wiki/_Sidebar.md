@@ -6,6 +6,7 @@
 - [Commandes](Commands)
 - [J2534 / Pass-Thru](J2534)
 - [Architecture](Architecture)
+- [Plan d’architecte](Plan-Architecte)
 - [Connexions](Connections)
 - [Configuration](Configuration)
 - [CI/CD](CICD)

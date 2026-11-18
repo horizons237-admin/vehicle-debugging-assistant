@@ -9,6 +9,7 @@ Extension VS Code pour l’**analyse** d’erreurs automobile (UDS, OBD-II, AUTO
 | [Commandes](Commands) | Palette (80+) |
 | [J2534 / Pass-Thru](J2534) | Discover + probe analysis-only |
 | [Architecture](Architecture) | Structure du code |
+| [Plan d’architecte](Plan-Architecte) | Vue 4 phases (fondations → envol) |
 | [Connexions](Connections) | Jira, Confluence, CodeBeamer, LLM |
 | [Configuration](Configuration) | Settings |
 | [CI/CD](CICD) | Pipelines |
@@ -36,3 +37,6 @@ Les estimations ASIL et analyses IA sont **indicatives**. Ce n’est **pas** un 
 
 ### J2534 lab (v0.2.9)
 - Registry discovery + analysis-only probe — see [J2534](J2534).
+
+### Plan d’architecte
+- Vue structurée du produit (4 phases) — [Plan d’architecte](Plan-Architecte).
