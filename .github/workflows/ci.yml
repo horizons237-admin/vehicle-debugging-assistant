@@ -59,7 +59,7 @@ jobs:
           ls -la vehicle-debugging-assistant-ci.vsix
 
       - name: Upload VSIX artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: vsix-ci-${{ github.sha }}
           path: vehicle-debugging-assistant-ci.vsix
@@ -67,7 +67,7 @@ jobs:
           retention-days: 14
 
       - name: Upload sample CI/CD report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: sample-cicd-report
           path: resources/sample_cicd_report.json
