@@ -151,6 +151,8 @@ Pour affirmer *X contribue à Y* dans un dossier MOS :
 
 ## PHASE 3 | DÉCHIFFRAGE — De la Trace Brute au Réseau de Preuves
 
+> **Runbook opérationnel (commandes)** : [Runbook Phase 3](Runbook-Phase3)
+
 ### 3.1 Raffinerie qualitative (de la voix du bus au réseau)
 
 ```
@@ -270,6 +272,7 @@ Méthodologie ←———► Analyse (ciment : triage, packs)
 | Release Windows | https://github.com/horizons237-admin/vehicle-debugging-assistant/releases/tag/v0.2.9-windows |
 | Wiki J2534 | https://github.com/horizons237-admin/vehicle-debugging-assistant/wiki/J2534 |
 | Wiki Safety | https://github.com/horizons237-admin/vehicle-debugging-assistant/wiki/Safety |
+| Runbook Phase 3 | https://github.com/horizons237-admin/vehicle-debugging-assistant/blob/main/wiki/Runbook-Phase3.md |
 
 ---
 
