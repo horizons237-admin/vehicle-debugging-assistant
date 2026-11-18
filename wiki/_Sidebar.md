@@ -4,6 +4,7 @@
 - [Installation](Installation)
 - [Guide utilisateur](User-Guide)
 - [Commandes](Commands)
+- [J2534 / Pass-Thru](J2534)
 - [Architecture](Architecture)
 - [Connexions](Connections)
 - [Configuration](Configuration)
