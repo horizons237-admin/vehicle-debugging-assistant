@@ -16,23 +16,22 @@
 - [x] Bus logs : ASC, BLF lite, MF4 probe/decode (deps optionnelles)  
 - [x] BPMN Level-2 + UML Activity  
 - [x] **J2534** registry discover + probe analysis-only (Windows)  
-- [x] **Plan d’architecte** + **Runbook Phase 3** + **Runbook Phase 4**  
+- [x] **Plan d’architecte** + **Runbooks Phase 1–4**  
 - [x] Releases VSIX Windows / Linux (`v0.2.9-*`)  
+- [x] TRACEABILITY REQ ↔ code ↔ test (baseline 0.2.9)  
 
 ## En cours / prochain (Sprint A — crédibilité)
 
-Priorité audit 2026-11-18 :
-
 - [x] Aligner CHANGELOG / Roadmap / README  
-- [x] Smoke Extension Host checklist documentée ([Smoke-Extension-Host](Smoke-Extension-Host) / docs/SMOKE_EXTENSION_HOST.md) — exécution manuelle F5 encore à signer  
-- [x] Self-diagnostic enrichi : platform, python32, buslog scripts, check_deps, safety posture (recompile / F5 pour valider)  
-- [x] Message unique démo : J2534 = Open/ReadVersion/Close only (README + Safety self-diag hint)  
+- [x] Smoke Extension Host checklist documentée — exécution manuelle F5 encore à signer  
+- [x] Self-diagnostic enrichi  
+- [x] Message unique démo J2534 analysis-only  
 
 ## Planifié 0.3.0
 
 - [ ] Tests unitaires TypeScript + smoke Extension Host automatisé  
-- [x] Matrice TRACEABILITY REQ → commande → test élargie (docs/TRACEABILITY.md, baseline 0.2.9)  
-- [ ] Runbooks Phase 1 (Fondations) et Phase 2 (Exploration)  
+- [x] Matrice TRACEABILITY REQ → commande → test élargie  
+- [x] Runbooks Phase 1 (Fondations) et Phase 2 (Exploration)  
 - [ ] DoIP / transport : documenter clairement sim vs live  
 - [ ] i18n FR / EN cohérent  
 - [ ] Marquer ou retirer les stubs restants dans Commands + Self-diag  
@@ -51,8 +50,7 @@ Priorité audit 2026-11-18 :
 ## Références
 
 - [Plan d’architecte](Plan-Architecte)  
-- [Runbook Phase 3](Runbook-Phase3) · [Runbook Phase 4](Runbook-Phase4)  
-- [Smoke Extension Host](Smoke-Extension-Host)  
-- [Traçabilité](Traceability)  
+- [Runbook Phase 1](Runbook-Phase1) · [2](Runbook-Phase2) · [3](Runbook-Phase3) · [4](Runbook-Phase4)  
+- [Smoke Extension Host](Smoke-Extension-Host) · [Traçabilité](Traceability)  
 - [Safety](Safety) · [J2534](J2534)  
 - Releases : https://github.com/horizons237-admin/vehicle-debugging-assistant/releases  

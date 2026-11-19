@@ -7,6 +7,8 @@
 - [J2534 / Pass-Thru](J2534)
 - [Architecture](Architecture)
 - [Plan d’architecte](Plan-Architecte)
+- [Runbook Phase 1](Runbook-Phase1)
+- [Runbook Phase 2](Runbook-Phase2)
 - [Runbook Phase 3](Runbook-Phase3)
 - [Runbook Phase 4](Runbook-Phase4)
 - [Smoke Extension Host](Smoke-Extension-Host)

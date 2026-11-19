@@ -10,6 +10,11 @@
 
 ## Workflows recommandés
 
+### Phase 1 — Fondations
+[Runbook Phase 1](Runbook-Phase1) — install, Self-diag, safety, settings.
+
+### Phase 2 — Exploration
+[Runbook Phase 2](Runbook-Phase2) — connect, logs, DoIP/J2534 discover, corpus.
 
 ### Phase 3 — Déchiffrage (runbook)
 Séquence lab Trace → preuves MOS : [Runbook Phase 3](Runbook-Phase3)  
