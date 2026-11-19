@@ -29,6 +29,8 @@
 
 ## PHASE 1 | FONDATIONS — Le Code Source du Produit
 
+> **Runbook opérationnel** : [Runbook Phase 1](Runbook-Phase1)
+
 ### 1.1 Matrice épistémologique (posture produit)
 
 | | **Positivisme lab** (mesure) | **Constructivisme lab** (sens) |
@@ -83,6 +85,8 @@ Indicateurs mesurables (codes, PIDs, signaux, métriques anomaly)
 ---
 
 ## PHASE 2 | EXPLORATION — Sonder le Terrain Diagnostic
+
+> **Runbook opérationnel** : [Runbook Phase 2](Runbook-Phase2)
 
 ### 2.1 Continuum des « entretiens » avec l’ECU
 
@@ -274,6 +278,8 @@ Méthodologie ←———► Analyse (ciment : triage, packs)
 | Release Windows | https://github.com/horizons237-admin/vehicle-debugging-assistant/releases/tag/v0.2.9-windows |
 | Wiki J2534 | https://github.com/horizons237-admin/vehicle-debugging-assistant/wiki/J2534 |
 | Wiki Safety | https://github.com/horizons237-admin/vehicle-debugging-assistant/wiki/Safety |
+| Runbook Phase 1 | https://github.com/horizons237-admin/vehicle-debugging-assistant/blob/main/wiki/Runbook-Phase1.md |
+| Runbook Phase 2 | https://github.com/horizons237-admin/vehicle-debugging-assistant/blob/main/wiki/Runbook-Phase2.md |
 | Runbook Phase 3 | https://github.com/horizons237-admin/vehicle-debugging-assistant/blob/main/wiki/Runbook-Phase3.md |
 | Runbook Phase 4 | https://github.com/horizons237-admin/vehicle-debugging-assistant/blob/main/wiki/Runbook-Phase4.md |
 
