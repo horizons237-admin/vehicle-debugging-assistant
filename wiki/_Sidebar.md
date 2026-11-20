@@ -5,6 +5,7 @@
 - [Guide utilisateur](User-Guide)
 - [Commandes](Commands)
 - [J2534 / Pass-Thru](J2534)
+- [Transports sim vs live](Transports-Sim-vs-Live)
 - [Architecture](Architecture)
 - [Plan d’architecte](Plan-Architecte)
 - [Runbook Phase 1](Runbook-Phase1)

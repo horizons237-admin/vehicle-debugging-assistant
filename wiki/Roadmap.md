@@ -10,7 +10,7 @@
 - [x] **P2** Anomaly baseline, data governance, partner packs, fleet offline, DBC, CI watch  
 - [x] **P3** OTA correlation (read-only), UN R155 checklist (aide), lab incident pack, EV status  
 
-### Plateforme & docs (0.2.x)
+### Plateforme & docs (0.2.x → suite audit)
 - [x] SDLC docs + issue templates (bug / feature / safety)  
 - [x] CI GitHub + GitLab + exemples runners K8s  
 - [x] Bus logs : ASC, BLF lite, MF4 probe/decode (deps optionnelles)  
@@ -18,9 +18,10 @@
 - [x] **J2534** registry discover + probe analysis-only (Windows)  
 - [x] **Plan d’architecte** + **Runbooks Phase 1–4**  
 - [x] Releases VSIX Windows / Linux (`v0.2.9-*`)  
-- [x] TRACEABILITY REQ ↔ code ↔ test (baseline 0.2.9)  
+- [x] TRACEABILITY REQ ↔ code ↔ test  
+- [x] **Transports sim vs live** (DoIP / J2534 / CAN / stubs)  
 
-## En cours / prochain (Sprint A — crédibilité)
+## Sprint A — crédibilité (audit)
 
 - [x] Aligner CHANGELOG / Roadmap / README  
 - [x] Smoke Extension Host checklist documentée — exécution manuelle F5 encore à signer  
@@ -30,12 +31,9 @@
 ## Planifié 0.3.0
 
 - [ ] Tests unitaires TypeScript + smoke Extension Host automatisé  
-- [x] Matrice TRACEABILITY REQ → commande → test élargie  
-- [x] Runbooks Phase 1 (Fondations) et Phase 2 (Exploration)  
-- [ ] DoIP / transport : documenter clairement sim vs live  
 - [ ] i18n FR / EN cohérent  
-- [ ] Marquer ou retirer les stubs restants dans Commands + Self-diag  
 - [ ] Source de vérité wiki unique (`wiki/` ↔ wiki.git / Pages)  
+- [ ] (Option) UDS-via-J2534 analysis-only si besoin lab — hors flash  
 
 ## Hors scope volontaire
 
@@ -50,7 +48,7 @@
 ## Références
 
 - [Plan d’architecte](Plan-Architecte)  
-- [Runbook Phase 1](Runbook-Phase1) · [2](Runbook-Phase2) · [3](Runbook-Phase3) · [4](Runbook-Phase4)  
-- [Smoke Extension Host](Smoke-Extension-Host) · [Traçabilité](Traceability)  
+- [Runbook 1](Runbook-Phase1) · [2](Runbook-Phase2) · [3](Runbook-Phase3) · [4](Runbook-Phase4)  
+- [Transports sim vs live](Transports-Sim-vs-Live) · [Smoke](Smoke-Extension-Host) · [Traçabilité](Traceability)  
 - [Safety](Safety) · [J2534](J2534)  
 - Releases : https://github.com/horizons237-admin/vehicle-debugging-assistant/releases  
