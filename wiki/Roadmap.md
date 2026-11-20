@@ -20,6 +20,7 @@
 - [x] Releases VSIX Windows / Linux (`v0.2.9-*`)  
 - [x] TRACEABILITY REQ ↔ code ↔ test  
 - [x] **Transports sim vs live** (DoIP / J2534 / CAN / stubs)  
+- [x] Tests unitaires Node (contracts package.json + triage + redaction + smoke IDs)  
 
 ## Sprint A — crédibilité (audit)
 
@@ -30,7 +31,7 @@
 
 ## Planifié 0.3.0
 
-- [ ] Tests unitaires TypeScript + smoke Extension Host automatisé  
+- [ ] Smoke Extension Host automatisé (`@vscode/test-electron`)  
 - [ ] i18n FR / EN cohérent  
 - [ ] Source de vérité wiki unique (`wiki/` ↔ wiki.git / Pages)  
 - [ ] (Option) UDS-via-J2534 analysis-only si besoin lab — hors flash  
