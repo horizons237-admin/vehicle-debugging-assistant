@@ -239,7 +239,6 @@ testJ2534CommandsAndSettings();
 function testNoUnsafeCommandIds() {
   const pkg = require('../../package.json');
   const cmds = (pkg.contributes.commands || []).map((c) => c.command.toLowerCase());
-  const titles = (pkg.contributes.commands || []).map((c) => String(c.title || '').toLowerCase());
   const banned = ['flashecu', 'writemsgs', 'securityaccess', 'immobilizer', 'lockdoors', 'ecall'];
   for (const b of banned) {
     assert(!cmds.some((c) => c.includes(b)), `banned id fragment ${b}`);
@@ -261,4 +260,21 @@ function testLlmUploadDefaultOff() {
 }
 testLlmUploadDefaultOff();
 
-console.log('All unit tests passed (including Sprint A/0.3 contracts)');
+function testI18nKeyParity() {
+  const path = require('path');
+  const fs = require('fs');
+  const p = path.join(__dirname, '..', '..', 'src', 'utils', 'i18n.dicts.json');
+  assert(fs.existsSync(p), 'i18n.dicts.json missing');
+  const d = JSON.parse(fs.readFileSync(p, 'utf8'));
+  const enKeys = Object.keys(d.en).sort();
+  const frKeys = Object.keys(d.fr).sort();
+  assert(enKeys.length >= 15, 'en keys count');
+  assert(enKeys.join(',') === frKeys.join(','), 'en/fr key parity');
+  assert(d.en['safety.disclaimer'] && d.fr['safety.disclaimer'], 'safety.disclaimer');
+  assert(d.en['safety.j2534'] && /WriteMsgs|analysis/i.test(d.en['safety.j2534']), 'j2534 safety en');
+  assert(/analysis-only|WriteMsgs/i.test(d.en['cmd.j2534Probe']), 'probe title key');
+  console.log('  i18nParity: 4 passed');
+}
+testI18nKeyParity();
+
+console.log('All unit tests passed (including Sprint A/0.3 contracts + i18n)');
