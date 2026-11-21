@@ -21,6 +21,7 @@ node tests/unit/run_unit_tests.js
 | **noUnsafeCommands** | No flash/WriteMsgs/eCall-style command IDs |
 | **redaction** | VIN / email mask contract |
 | **llmUploadDefault** | Remote upload default false |
+| **i18nParity** | EN/FR keys equal in `i18n.dicts.json` |
 
 ## What is **not** covered
 
@@ -32,4 +33,4 @@ node tests/unit/run_unit_tests.js
 
 `npm test` runs `test:python` then `test:unit`.
 
-Full EH automation → 0.3 (e.g. `@vscode/test-electron`) when needed.
+Full EH automation → see [TEST_EH.md](TEST_EH.md).
