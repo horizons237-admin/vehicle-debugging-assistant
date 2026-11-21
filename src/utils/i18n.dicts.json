@@ -20,7 +20,17 @@
     "transport.sim": "Simulation mode",
     "transport.live": "Lab live (read-only analysis)",
     "phase3.ready": "Corpus ready for Phase 3 (Déchiffrage)",
-    "phase4.governance": "Run Data Governance before partner export"
+    "phase4.governance": "Run Data Governance before partner export",
+    "selfdiag.progress": "Vehicle Debug: self-diagnostic…",
+    "selfdiag.done": "Self-diagnostic: {summary}",
+    "selfdiag.tooltip": "Self-diagnostic: {summary}\nClick to re-run",
+    "connect.simPrompt": "Hardware/Python dependencies not available. Enter simulation mode?",
+    "connect.ok": "ECU connected ({mode})",
+    "connect.fail": "ECU connect failed",
+    "j2534.nextDiscover": "Run “J2534: Discover Drivers (registry)” on Windows",
+    "j2534.nextPath": "Set vehicleDebug.j2534.libraryPath to a FunctionLibrary DLL",
+    "j2534.nextProbe": "Run “J2534: Probe Library (analysis-only)” — Open/ReadVersion/Close only",
+    "wiki.syncHint": "Sync wiki/ folder to GitHub Wiki when ready"
   },
   "fr": {
     "cmd.connect": "Connecter à l’ECU",
@@ -43,6 +53,16 @@
     "transport.sim": "Mode simulation",
     "transport.live": "Lab live (analyse en lecture seule)",
     "phase3.ready": "Corpus prêt pour la Phase 3 (Déchiffrage)",
-    "phase4.governance": "Exécuter la gouvernance données avant export partenaire"
+    "phase4.governance": "Exécuter la gouvernance données avant export partenaire",
+    "selfdiag.progress": "Vehicle Debug : auto-diagnostic…",
+    "selfdiag.done": "Auto-diagnostic : {summary}",
+    "selfdiag.tooltip": "Auto-diagnostic : {summary}\nCliquer pour relancer",
+    "connect.simPrompt": "Dépendances hardware/Python indisponibles. Passer en mode simulation ?",
+    "connect.ok": "ECU connecté ({mode})",
+    "connect.fail": "Échec de connexion ECU",
+    "j2534.nextDiscover": "Lancer « J2534 : découvrir les drivers (registre) » sous Windows",
+    "j2534.nextPath": "Définir vehicleDebug.j2534.libraryPath vers la DLL FunctionLibrary",
+    "j2534.nextProbe": "Lancer « J2534 : sonder la bibliothèque (analysis-only) » — Open/ReadVersion/Close uniquement",
+    "wiki.syncHint": "Synchroniser le dossier wiki/ vers le GitHub Wiki quand prêt"
   }
 }

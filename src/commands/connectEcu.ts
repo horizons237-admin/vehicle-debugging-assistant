@@ -6,6 +6,7 @@ import {
   setEcuConnected,
   TransportMode
 } from '../utils/sessionStore';
+import { t } from '../utils/i18n';
 
 export async function connectEcu(): Promise<boolean> {
   const config = getConfig();
@@ -48,6 +49,7 @@ export async function connectEcu(): Promise<boolean> {
     return true;
   }
 
+  // Fallback simulation mode for development without hardware
   if (
     (result.stderr &&
       (result.stderr.includes('No module named') ||
@@ -56,7 +58,7 @@ export async function connectEcu(): Promise<boolean> {
     !result.success
   ) {
     const choice = await vscode.window.showWarningMessage(
-      'Hardware/Python dependencies not available. Enter simulation mode?',
+      t('connect.simPrompt'),
       'Yes (Simulation)',
       'Cancel'
     );
@@ -91,7 +93,7 @@ export async function disconnectEcu(): Promise<void> {
   });
 }
 
-/** @deprecated Prefer isEcuConnected() from sessionStore */
+/** @deprecated Prefer isEcuConnected() from sessionStore — kept for call-site compatibility */
 export function getConnectionState(): boolean {
   return isEcuConnected();
 }
