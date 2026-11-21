@@ -6,11 +6,17 @@ type Dict = Record<string, string>;
 const en = (dicts as { en: Dict; fr: Dict }).en;
 const fr = (dicts as { en: Dict; fr: Dict }).fr;
 
-export function t(key: string): string {
+export function t(key: string, params?: Record<string, string>): string {
   const cfg = vscode.workspace.getConfiguration('vehicleDebug');
   const lang = (cfg.get<string>('locale') || vscode.env.language || 'en').toLowerCase();
   const dict = lang.startsWith('fr') ? fr : en;
-  return dict[key] || en[key] || key;
+  let s = dict[key] || en[key] || key;
+  if (params) {
+    for (const [k, v] of Object.entries(params)) {
+      s = s.replace(new RegExp(`\\{${k}\\}`, 'g'), v);
+    }
+  }
+  return s;
 }
 
 export function currentLocale(): 'fr' | 'en' {
@@ -19,7 +25,6 @@ export function currentLocale(): 'fr' | 'en' {
   return lang.startsWith('fr') ? 'fr' : 'en';
 }
 
-/** Keys available for tests / tooling */
 export function getDictKeys(): string[] {
   return Object.keys(en).sort();
 }
